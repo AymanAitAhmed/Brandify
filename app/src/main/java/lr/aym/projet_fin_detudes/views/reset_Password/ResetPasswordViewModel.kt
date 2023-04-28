@@ -23,6 +23,8 @@ class ResetPasswordViewModel @Inject constructor(
         mutableStateOf<SendPasswordResetEmailResponse>(ResponseEmailPassword.Success(false))
 
     var errorMessage = mutableStateOf("")
+
+    var showEmailSentDialog = mutableStateOf(false)
     fun sendResetPasswordEmail() {
         viewModelScope.launch {
             resetPasswordResponse=emailPasswordRepo.sendPasswordResetEmail(email = emailValue.value)

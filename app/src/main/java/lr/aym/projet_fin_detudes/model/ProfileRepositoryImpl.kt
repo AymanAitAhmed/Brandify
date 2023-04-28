@@ -1,5 +1,6 @@
 package lr.aym.projet_fin_detudes.model
 
+import android.util.Log
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.FirebaseAuth
 import lr.aym.projet_fin_detudes.model.google.ResponseGoogle
@@ -16,12 +17,13 @@ private val auth: FirebaseAuth,
     override val photoUrl: String
         get() = auth.currentUser?.photoUrl.toString()
 
-    override suspend fun signOut(): SignOutResponse {
+    override fun signOut(): SignOutResponse {
         return try {
             oneTapClient.signOut()
             auth.signOut()
             ResponseGoogle.Success(true)
         }catch (e:Exception){
+            Log.d("signoutFail", "signOut: $e")
             ResponseGoogle.Failure(e)
         }
     }

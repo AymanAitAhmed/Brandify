@@ -8,5 +8,5 @@ interface ProfileRepository {
     val displayName: String
     val photoUrl: String
 
-    suspend fun signOut(): SignOutResponse
+    fun signOut(): SignOutResponse
 }

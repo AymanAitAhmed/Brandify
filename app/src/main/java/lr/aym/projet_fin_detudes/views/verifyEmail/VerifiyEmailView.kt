@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.firebase.auth.FacebookAuthProvider
 import lr.aym.projet_fin_detudes.R
 import lr.aym.projet_fin_detudes.components.LoadingTextButton
 
@@ -36,6 +37,19 @@ fun VerifiyEmailView(
     viewModel: VerifiyEmailViewModel = hiltViewModel(),
     navController: NavController
 ) {
+    
+    LaunchedEffect(key1 = viewModel.currentUser?.providerId){
+        val userProvider = viewModel.currentUser?.providerData
+        if (userProvider != null) {
+            for (profile in userProvider){
+                if (profile.providerId == FacebookAuthProvider.PROVIDER_ID){
+                    viewModel.facebookProvider.value = true
+                    viewModel.resendVerificationEmail()
+                }
+            }
+        }
+    }
+    
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -56,6 +70,7 @@ fun VerifiyEmailView(
                 modifier = Modifier
                     .size(150.dp)
                     .clip(shape = CircleShape)
+                    .clickable { viewModel.signOut() }
             )
             Text(
                 text = "Verify your email", color = MaterialTheme.colors.onBackground,
@@ -64,14 +79,13 @@ fun VerifiyEmailView(
                 modifier = Modifier.padding(top = 8.dp)
             )
             Text(
-                text = "An Email has been sent to your email address." +
-                        " please click the link in the email to verify your email address",
+                text = "An Email has been sent to ${viewModel.currentUser?.email}." +
+                        "please click the link in the email to verify your email address.",
                 color = MaterialTheme.colors.onBackground,
                 style = MaterialTheme.typography.body1,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(8.dp)
             )
-
             Text(
                 text = viewModel.errorMessage.value,
                 color = Color.Red,
@@ -105,7 +119,9 @@ fun VerifiyEmailView(
             }
 
             LaunchedEffect(key1 = viewModel.verifiedEmail) {
-                if (viewModel.verifiedEmail) {
+                if (viewModel.verifiedEmail && viewModel.facebookProvider.value) {
+                    navController.navigate("home_Screen")
+                }else if (viewModel.verifiedEmail){
                     navController.navigate("additional_info_signUp")
                 }
             }

@@ -2,6 +2,8 @@ package lr.aym.projet_fin_detudes.di
 
 import android.app.Application
 import android.content.Context
+import com.facebook.CallbackManager
+import com.facebook.login.LoginManager
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
@@ -18,6 +20,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import lr.aym.projet_fin_detudes.R
+import lr.aym.projet_fin_detudes.components.SignOut
 import lr.aym.projet_fin_detudes.model.emailPassword.EmailPasswordAuthRepository
 import lr.aym.projet_fin_detudes.model.emailPassword.EmailPasswordAuthRepositoryImpl
 import lr.aym.projet_fin_detudes.model.google.GoogleAuthRepository
@@ -26,15 +29,24 @@ import lr.aym.projet_fin_detudes.model.ProfileRepository
 import lr.aym.projet_fin_detudes.model.ProfileRepositoryImpl
 import lr.aym.projet_fin_detudes.model.emailPassword.FireStoreRepository
 import lr.aym.projet_fin_detudes.model.emailPassword.FireStoreRepositoryImpl
+import lr.aym.projet_fin_detudes.model.facebook.FacebookAuthRepository
+import lr.aym.projet_fin_detudes.model.facebook.FacebookAuthRepositoryImpl
 import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
 @InstallIn(ViewModelComponent::class)
 class AppModule {
 
     @Provides
-    fun provideFirebaseAuth()=Firebase.auth
+    fun provideFirebaseAuth() = Firebase.auth
 
+
+    @Provides
+    fun provideSignOut(
+        profileRepository: ProfileRepository,
+        facebookAuthRepository: FacebookAuthRepository
+    ): SignOut = SignOut(profileRepository, facebookAuthRepository)
 
     @Provides
     fun provideEmailAuthRepository(): EmailPasswordAuthRepository = EmailPasswordAuthRepositoryImpl(
@@ -48,25 +60,26 @@ class AppModule {
     )
 
     @Provides
-    fun provideFirebaseFirestore()=Firebase.firestore
+    fun provideFirebaseFirestore() = Firebase.firestore
 
     @Provides
     fun provideOneTapClient(
         @ApplicationContext
-        context:Context
-    )=Identity.getSignInClient(context)
+        context: Context
+    ) = Identity.getSignInClient(context)
 
     @Provides
     @Named("SIGN_IN_REQUEST")
     fun provideSignInRequest(
         application: Application
-    )= BeginSignInRequest.builder()
+    ) = BeginSignInRequest.builder()
         .setGoogleIdTokenRequestOptions(
             BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                 .setSupported(true)
                 .setServerClientId(application.getString(R.string.web_client_id))
                 .setFilterByAuthorizedAccounts(false)
-                .build())
+                .build()
+        )
         .setAutoSelectEnabled(false)
         .build()
 
@@ -75,13 +88,14 @@ class AppModule {
     @Named("SIGN_UP_REQUEST")
     fun provideSignUpRequest(
         application: Application
-    )= BeginSignInRequest.builder()
+    ) = BeginSignInRequest.builder()
         .setGoogleIdTokenRequestOptions(
             BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                 .setSupported(true)
                 .setServerClientId(application.getString(R.string.web_client_id))
                 .setFilterByAuthorizedAccounts(false)
-                .build())
+                .build()
+        )
         .build()
 
 
@@ -123,6 +137,25 @@ class AppModule {
     ): ProfileRepository = ProfileRepositoryImpl(
         auth = auth,
         oneTapClient = oneTapClient,
+    )
+
+    //Facebook
+
+    @Provides
+    fun provideLoginManager() = LoginManager.getInstance()
+
+    @Provides
+    fun provideCallBackManager() = CallbackManager.Factory.create()
+
+    @Provides
+    fun provideFacebookRepo(
+        loginManager: LoginManager,
+        callbackManager: CallbackManager,
+        auth: FirebaseAuth
+    ): FacebookAuthRepository = FacebookAuthRepositoryImpl(
+        loginManager = loginManager,
+        callbackManager = callbackManager,
+        auth = auth
     )
 
 

@@ -1,7 +1,10 @@
 package lr.aym.projet_fin_detudes
 
+import android.content.pm.PackageManager
+import android.content.pm.PackageManager.NameNotFoundException
 import android.os.Build
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -22,12 +25,31 @@ import lr.aym.projet_fin_detudes.views.home.Home
 import lr.aym.projet_fin_detudes.views.reset_Password.ResetPasswordView
 import lr.aym.projet_fin_detudes.views.signIn.SignInView
 import lr.aym.projet_fin_detudes.views.signUp.SignUpView
+import lr.aym.projet_fin_detudes.views.splashScreen.SplashScreen
 import lr.aym.projet_fin_detudes.views.verifyEmail.VerifiyEmailView
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        try {
+            val info = packageManager.getPackageInfo(
+                "lr.aym.projet_fin_detudes",  //Insert your own package name.
+                PackageManager.GET_SIGNATURES
+            )
+            for (signature in info.signatures) {
+                val md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
+            }
+        } catch (e: NameNotFoundException) {
+        } catch (e: NoSuchAlgorithmException) {
+        }
+
         super.onCreate(savedInstanceState)
         val viewModel by viewModels<MainViewModel>()
         setContent {
@@ -39,19 +61,25 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     val isUserSignedOut = viewModel.getAuthState().collectAsStateWithLifecycle().value
-                    val startDestination :String = if (isUserSignedOut){
-                        "signIn_Screen"
-                    }else{
-                        if (viewModel.isEmailVerified){
-                            Log.d("navigatedFrom", "MainActivity")
-                            "home_Screen"
+                    val startDestination = if (isUserSignedOut){
+                            "signIn_Screen"
                         }else{
-                            "verifiy_email_Screen"
+                            if (viewModel.isEmailVerified){
+                                Log.d("navigatedFrom", "MainActivity")
+                                "home_Screen"
+                            }else{
+                                "verifiy_email_Screen"
+                            }
                         }
-                    }
+
                     Log.d("isUserVerified", "onCreate: $startDestination")
 
-                    NavHost(navController = navController, startDestination = startDestination) {
+                    NavHost(navController = navController, startDestination = "splash_Screen") {
+
+                        composable("splash_Screen"){
+                            SplashScreen (navController, startDestination)
+                        }
+
                         composable(route = "signIn_Screen") {
                             SignInView(navigateToSignUpScreen = {
                                 navController.navigate("signUp_Screen")
@@ -75,7 +103,7 @@ class MainActivity : ComponentActivity() {
                             VerifiyEmailView(navController = navController)
                         }
                         composable("home_Screen") {
-                            Home()
+                            Home(navController = navController)
                         }
 
 
@@ -86,6 +114,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
     }
 }
 

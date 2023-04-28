@@ -1,11 +1,17 @@
 <resources>
     <string name="app_name">Projet_fin_d\'etudes</string>
     <string name="web_client_id">541350921577-o1irkf8ke8co4sakb1avjd1u91g65pmn.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">234541415710679</string>
+    <string name="fb_login_protocol_scheme">fb234541415710679</string>
+    <string name="facebook_client_token">8f884056a0afffe81e4b157c12e237b4</string>
+
+
     <string name="Sign_In">Sign In</string>
     <string name="Email">Email</string>
     <string name="Password">Password</string>
     <string name="Forgot_password">Forgot password?reset</string>
     <string name="or_login_with">Or login with</string>
     <string name="no_Account">Don\'t have an Account? Sign Up</string>
+
 
 </resources>

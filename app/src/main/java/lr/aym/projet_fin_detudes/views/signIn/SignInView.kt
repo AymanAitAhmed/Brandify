@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,11 +31,22 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginResult
+import com.facebook.login.widget.LoginButton
 import com.google.android.gms.auth.api.identity.BeginSignInResult
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.GoogleAuthProvider.getCredential
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import lr.aym.projet_fin_detudes.R
 import lr.aym.projet_fin_detudes.components.LoadingTextButton
 import lr.aym.projet_fin_detudes.components.authErrors
@@ -50,6 +62,11 @@ fun SignInView(
     var signInWithGoogle = remember {
         mutableStateOf(false)
     }
+
+    if (viewModel.showFacebookLinkAccountDialog.value) {
+        FacebookLinkAccountError(showDialog = viewModel.showFacebookLinkAccountDialog)
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
 
 
@@ -177,16 +194,17 @@ fun SignInView(
                 horizontalArrangement = Arrangement.Center
             ) {
 
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.facebook_logo),
-                        contentDescription = null,
-                        tint = MaterialTheme.colors.primary,
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .size(45.dp)
-                    )
-                }
+                FacebookLoginButton(
+                    onAuthComplete = { navController.navigate("home_Screen") },
+                    onAuthError = {
+                        Log.d("fbsignin", "${it.message}")
+                        if (it.message == "An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.") {
+                            Log.d("fbsignin", "executed")
+                            viewModel.showFacebookLinkAccountDialog.value = true
+                        }
+
+                    })
+
                 IconButton(onClick = {
                     signInWithGoogle.value = true
                     viewModel.onSignInWithGoogleClick()
@@ -202,6 +220,7 @@ fun SignInView(
                 }
 
             }
+
             Text(
                 text = stringResource(id = R.string.no_Account),
                 color = MaterialTheme.colors.onSecondary,
@@ -307,3 +326,4 @@ fun SignInView(
     }
 
 }
+

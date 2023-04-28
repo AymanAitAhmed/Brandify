@@ -29,6 +29,15 @@ fun ResetPasswordView(
     viewModel: ResetPasswordViewModel = hiltViewModel(),
     navController: NavController
 ) {
+
+    if (viewModel.showEmailSentDialog.value) {
+        EmailSentDialog(
+            navController = navController,
+            showEmailSentDialog = viewModel.showEmailSentDialog
+        )
+    }
+
+
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
 
         Column(
@@ -114,7 +123,7 @@ fun ResetPasswordView(
                     modifier = Modifier
                         .padding(start = 16.dp)
                         .clickable {
-                                   navController.navigate("signIn_Screen")
+                            navController.navigate("signIn_Screen")
                         },
                     color = MaterialTheme.colors.onSecondary
                 )
@@ -139,7 +148,7 @@ fun ResetPasswordView(
             val isResetEmailPasswordSent = resetPasswordResoponse.data
             LaunchedEffect(key1 = isResetEmailPasswordSent) {
                 if (isResetEmailPasswordSent) {
-                    navController.navigate("signIn_Screen")
+                    viewModel.showEmailSentDialog.value = true
                 }
             }
         }

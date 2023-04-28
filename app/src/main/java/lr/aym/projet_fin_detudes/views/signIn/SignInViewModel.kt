@@ -45,6 +45,8 @@ class SignInViewModel @Inject constructor(
 
     var errorMessage = mutableStateOf("")
 
+    var showFacebookLinkAccountDialog = mutableStateOf(false)
+
 
     fun onShowHideEyeClick() {
         showHidePassword.value = !showHidePassword.value
