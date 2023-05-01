@@ -20,8 +20,13 @@ class SignUpViewModel @Inject constructor(
 
     var emailTextFieldValue = mutableStateOf("")
     var passwordTextFieldValue = mutableStateOf("")
+    var confirmPasswordTextFieldValue = mutableStateOf("")
 
-    var signUpResponseEmailPassword by mutableStateOf<SignUpResponse>(ResponseEmailPassword.Success(false))
+    var signUpResponseEmailPassword by mutableStateOf<SignUpResponse>(
+        ResponseEmailPassword.Success(
+            false
+        )
+    )
         private set
     var sendEmailVerificationResponseEmailPassword by mutableStateOf<SendEmailVerificationResponse>(
         ResponseEmailPassword.Success(
@@ -33,6 +38,9 @@ class SignUpViewModel @Inject constructor(
     var showHidePassword = mutableStateOf(false)
     var showLoadingState = mutableStateOf(false)
     var errorMessage = mutableStateOf("")
+    var emailErrorMessage = mutableStateOf("")
+    var passwordErrorMessage = mutableStateOf("")
+    var confirmErrorMessage = mutableStateOf("")
 
     fun onShowHideEyeClick() {
         showHidePassword.value = !showHidePassword.value
@@ -45,7 +53,42 @@ class SignUpViewModel @Inject constructor(
             passwordTextFieldValue.value
         )
     }
-    fun sendEmailVerification()= viewModelScope.launch {
+
+    fun emailChecks():Boolean{
+        return if (emailTextFieldValue.value.isBlank()){
+            emailErrorMessage.value = "Please enter your email"
+            false
+        }else if (!emailTextFieldValue.value.contains("@")){
+            emailErrorMessage.value = "Please enter a valid email"
+            false
+        }else{
+            emailErrorMessage.value = ""
+            true
+        }
+    }
+    fun passwordChecks() :Boolean {
+
+        if (passwordTextFieldValue.value.length < 8) {
+            passwordErrorMessage.value = "Password must have 8 charachters at least"
+            return false
+        } else
+            if (!passwordTextFieldValue.value.any { it.isDigit() } ||
+                !passwordTextFieldValue.value.any { it.isLetter() }
+            ) {
+                passwordErrorMessage.value = "Password must have at least one character and one digit"
+                return false
+            } else if (passwordTextFieldValue.value != confirmPasswordTextFieldValue.value) {
+                passwordErrorMessage.value = ""
+                confirmErrorMessage.value = "Passwords do not match"
+                return false
+            } else {
+                passwordErrorMessage.value = ""
+                confirmErrorMessage.value = ""
+                return true
+            }
+    }
+
+    fun sendEmailVerification() = viewModelScope.launch {
         sendEmailVerificationResponseEmailPassword = ResponseEmailPassword.Loading
         sendEmailVerificationResponseEmailPassword = repository.sendEmailVerification()
     }

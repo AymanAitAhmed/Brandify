@@ -90,6 +90,7 @@ fun SignInView(
                 }
             )
 
+
             Text(
                 text = "${stringResource(id = R.string.Password)} :",
                 color = MaterialTheme.colors.primary,
@@ -170,7 +171,7 @@ fun SignInView(
                 FacebookLoginButton(
                     onAuthComplete = { navController.navigate("home_Screen") },
                     onAuthError = {
-                       // Log.d("fbsignin", "${it.message}")
+                        // Log.d("fbsignin", "${it.message}")
                         if (it.message == "An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.") {
                             //Log.d("fbsignin", "executed")
                             viewModel.showFacebookLinkAccountDialog.value = true

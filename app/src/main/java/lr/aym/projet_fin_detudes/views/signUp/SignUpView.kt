@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -74,7 +75,7 @@ fun SignUpView(
                 color = MaterialTheme.colors.primary,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 90.dp, top = 12.dp, bottom = 8.dp)
+                    .padding(start = 90.dp, top = 12.dp)
             )
 
             OutlinedTextField(value = viewModel.emailTextFieldValue.value,
@@ -93,12 +94,23 @@ fun SignUpView(
                 }
             )
 
+            if (viewModel.emailErrorMessage.value != ""){
+                Row(horizontalArrangement = Arrangement.Start, modifier = Modifier.fillMaxWidth(0.7f)) {
+                    Text(
+                        text = viewModel.emailErrorMessage.value,
+                        color = Color.Red,
+                        fontSize = 10.sp
+                    )
+                }
+            }
+
+
             Text(
                 text = stringResource(id = R.string.Password),
                 color = MaterialTheme.colors.primary,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 90.dp, top = 12.dp, bottom = 8.dp)
+                    .padding(start = 90.dp, top = 12.dp)
             )
             OutlinedTextField(
                 value = viewModel.passwordTextFieldValue.value,
@@ -133,15 +145,72 @@ fun SignUpView(
 
             )
 
-            Text(text = viewModel.errorMessage.value, color = Color.Red, fontSize = 10.sp)
+            if (viewModel.passwordErrorMessage.value != ""){
+                Row(horizontalArrangement = Arrangement.Start, modifier = Modifier.fillMaxWidth(0.7f)) {
+                    Text(
+                        text = viewModel.passwordErrorMessage.value,
+                        color = Color.Red,
+                        fontSize = 10.sp
+                    )
+                }
+            }
+
+
+            Text(
+                text = stringResource(id = R.string.Confirm_Password),
+                color = MaterialTheme.colors.primary,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 90.dp, top = 12.dp, bottom = 8.dp)
+            )
+            OutlinedTextField(
+                value = viewModel.confirmPasswordTextFieldValue.value,
+                onValueChange = { viewModel.confirmPasswordTextFieldValue.value = it },
+                shape = RoundedCornerShape(30.dp),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Lock,
+
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.primary
+                    )
+                },
+                label = {
+                    Text(text = stringResource(id = R.string.Confirm_Password))
+                },
+                visualTransformation = if (viewModel.showHidePassword.value) VisualTransformation.None
+                else PasswordVisualTransformation()
+
+            )
+
+            if (viewModel.confirmErrorMessage.value != ""){
+                Row(horizontalArrangement = Arrangement.Start, modifier = Modifier.fillMaxWidth(0.7f)) {
+                    Text(
+                        text = viewModel.confirmErrorMessage.value,
+                        color = Color.Red,
+                        fontSize = 10.sp
+                    )
+                }
+            }
+
+
+            if (viewModel.errorMessage.value != ""){
+                Text(text = viewModel.errorMessage.value, color = Color.Red, fontSize = 10.sp)
+            }
 
             LoadingTextButton(
                 showLoadingState = viewModel.showLoadingState,
                 text = stringResource(id = R.string.Sign_Up),
                 padding = 16.dp
             ) {
-                viewModel.onSignUpWithEmailAndPassword()
-                //Log.d("signuptag", "SignUp button clicked")
+                viewModel.errorMessage.value = ""
+                viewModel.passwordChecks()
+                viewModel.emailChecks()
+                if (viewModel.passwordChecks() && viewModel.emailChecks()){
+                    viewModel.onSignUpWithEmailAndPassword()
+                    //Log.d("signuptag", "SignUp button clicked")
+                }
+
             }
 
 

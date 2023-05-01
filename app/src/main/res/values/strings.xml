@@ -9,11 +9,13 @@
     <string name="Sign_In">Sign In</string>
     <string name="Email">Email</string>
     <string name="Password">Password</string>
+    <string name="Confirm_Password"> Confirm password</string>
     <string name="Forgot_password">Forgot password?reset</string>
     <string name="or_login_with">Or login with</string>
     <string name="no_Account">Don\'t have an Account? Sign Up</string>
 
     <string name="Sign_Up">Sign Up</string>
+    <string name="mismatch_passwords">Passwords do not match</string>
     <string name="Username">Username </string>
     <string name="Phone_Number">Phone Number </string>
     <string name="Birth_date">Date of birth </string>

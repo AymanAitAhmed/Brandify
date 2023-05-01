@@ -85,7 +85,10 @@ fun AdditionalSignInInfo(
                 onValueChange = { viewModel.username.value = it },
                 shape = RoundedCornerShape(15.dp),
                 label = {
-                    Text(stringResource(id = R.string.Username), color = MaterialTheme.colors.onSecondary)
+                    Text(
+                        stringResource(id = R.string.Username),
+                        color = MaterialTheme.colors.onSecondary
+                    )
                 },
                 leadingIcon = {
                     Icon(Icons.Filled.Person, null, tint = MaterialTheme.colors.primary)
@@ -95,6 +98,18 @@ fun AdditionalSignInInfo(
                     backgroundColor = MaterialTheme.colors.background
                 ),
             )
+            if (viewModel.usernameErrorMessage.value != "") {
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    modifier = Modifier.fillMaxWidth(0.7f)
+                ) {
+                    Text(
+                        text = viewModel.usernameErrorMessage.value,
+                        color = Color.Red,
+                        fontSize = 10.sp
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.size(8.dp))
 
@@ -108,7 +123,12 @@ fun AdditionalSignInInfo(
                 value = viewModel.phoneNumber.value,
                 shape = RoundedCornerShape(15.dp),
                 onValueChange = { viewModel.phoneNumber.value = it },
-                label = { Text(stringResource(id = R.string.Phone_Number), color = MaterialTheme.colors.onSecondary) },
+                label = {
+                    Text(
+                        stringResource(id = R.string.Phone_Number),
+                        color = MaterialTheme.colors.onSecondary
+                    )
+                },
                 leadingIcon = {
                     Icon(Icons.Filled.Phone, null, tint = MaterialTheme.colors.primary)
                 },
@@ -118,6 +138,18 @@ fun AdditionalSignInInfo(
                 ),
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Phone)
             )
+            if (viewModel.phoneNumberErrorMessage.value != "") {
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    modifier = Modifier.fillMaxWidth(0.7f)
+                ) {
+                    Text(
+                        text = viewModel.phoneNumberErrorMessage.value,
+                        color = Color.Red,
+                        fontSize = 10.sp
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.size(8.dp))
 
@@ -141,19 +173,37 @@ fun AdditionalSignInInfo(
                 value = viewModel.dateOfBirth.value,
                 shape = RoundedCornerShape(15.dp),
                 onValueChange = { viewModel.dateOfBirth.value = it },
-                label = { Text(stringResource(id = R.string.Birth_date), color = MaterialTheme.colors.onSecondary) },
+                label = {
+                    Text(
+                        stringResource(id = R.string.Birth_date),
+                        color = MaterialTheme.colors.onSecondary
+                    )
+                },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Phone),
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.DateRange,
                         contentDescription = null,
-                        tint = MaterialTheme.colors.primary,
-                        modifier = Modifier.clickable {
-                            calendarState.show()
-                        })
-                },
+                        tint = MaterialTheme.colors.primary
+                    )
+                }, modifier = Modifier.clickable {
+                    calendarState.show()
+                }
 
-                )
+            )
+
+            if (viewModel.dateOfBirthErrorMessage.value != "") {
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    modifier = Modifier.fillMaxWidth(0.7f)
+                ) {
+                    Text(
+                        text = viewModel.dateOfBirthErrorMessage.value,
+                        color = Color.Red,
+                        fontSize = 10.sp
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.size(8.dp))
 
@@ -210,9 +260,24 @@ fun AdditionalSignInInfo(
                 }
             }
 
+            if (viewModel.genderErrorMessage.value != "") {
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    modifier = Modifier.fillMaxWidth(0.7f)
+                ) {
+                    Text(
+                        text = viewModel.genderErrorMessage.value,
+                        color = Color.Red,
+                        fontSize = 10.sp
+                    )
+                }
+            }
+
             Spacer(modifier = Modifier.size(8.dp))
 
-            Text(text = viewModel.errorMessage.value, color = Color.Red)
+            if (viewModel.errorMessage.value != "") {
+                Text(text = viewModel.errorMessage.value, color = Color.Red)
+            }
 
 
             Row(
@@ -229,7 +294,14 @@ fun AdditionalSignInInfo(
                     height = 45.dp,
                     padding = 16.dp
                 ) {
-                    viewModel.addUserToFireStore()
+                    viewModel.usernameChecks()
+                    viewModel.phoneNumberChecks()
+                    viewModel.dateChecks()
+                    viewModel.genderChecks()
+                    if (viewModel.usernameChecks() && viewModel.phoneNumberChecks() &&
+                        viewModel.dateChecks() && viewModel.genderChecks()){
+                        viewModel.addUserToFireStore()
+                    }
 
                 }
             }
