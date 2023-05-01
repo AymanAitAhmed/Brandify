@@ -17,6 +17,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
+import lr.aym.projet_fin_detudes.R
 import lr.aym.projet_fin_detudes.components.LoadingTextButton
 import lr.aym.projet_fin_detudes.model.emailPassword.FirestoreResponse
 import java.util.*
@@ -62,7 +64,7 @@ fun AdditionalSignInInfo(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Sign Up",
+                    stringResource(id = R.string.Sign_Up),
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.h2,
                     color = MaterialTheme.colors.primary,
@@ -72,7 +74,7 @@ fun AdditionalSignInInfo(
 
 
             Text(
-                text = "Username :",
+                stringResource(id = R.string.Username),
                 style = MaterialTheme.typography.body1,
                 color = MaterialTheme.colors.primary,
 
@@ -83,7 +85,7 @@ fun AdditionalSignInInfo(
                 onValueChange = { viewModel.username.value = it },
                 shape = RoundedCornerShape(15.dp),
                 label = {
-                    Text(text = " User Name ", color = MaterialTheme.colors.onSecondary)
+                    Text(stringResource(id = R.string.Username), color = MaterialTheme.colors.onSecondary)
                 },
                 leadingIcon = {
                     Icon(Icons.Filled.Person, null, tint = MaterialTheme.colors.primary)
@@ -97,7 +99,7 @@ fun AdditionalSignInInfo(
             Spacer(modifier = Modifier.size(8.dp))
 
             Text(
-                text = "Phone Number :",
+                stringResource(id = R.string.Phone_Number),
                 style = MaterialTheme.typography.body1,
                 color = MaterialTheme.colors.primary
             )
@@ -106,7 +108,7 @@ fun AdditionalSignInInfo(
                 value = viewModel.phoneNumber.value,
                 shape = RoundedCornerShape(15.dp),
                 onValueChange = { viewModel.phoneNumber.value = it },
-                label = { Text("Phone Number", color = MaterialTheme.colors.onSecondary) },
+                label = { Text(stringResource(id = R.string.Phone_Number), color = MaterialTheme.colors.onSecondary) },
                 leadingIcon = {
                     Icon(Icons.Filled.Phone, null, tint = MaterialTheme.colors.primary)
                 },
@@ -120,7 +122,7 @@ fun AdditionalSignInInfo(
             Spacer(modifier = Modifier.size(8.dp))
 
             Text(
-                text = "Date of birth :",
+                stringResource(id = R.string.Birth_date),
                 style = MaterialTheme.typography.body1,
                 color = MaterialTheme.colors.primary
             )
@@ -139,7 +141,7 @@ fun AdditionalSignInInfo(
                 value = viewModel.dateOfBirth.value,
                 shape = RoundedCornerShape(15.dp),
                 onValueChange = { viewModel.dateOfBirth.value = it },
-                label = { Text("Date of birth", color = MaterialTheme.colors.onSecondary) },
+                label = { Text(stringResource(id = R.string.Birth_date), color = MaterialTheme.colors.onSecondary) },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Phone),
                 leadingIcon = {
                     Icon(
@@ -156,7 +158,7 @@ fun AdditionalSignInInfo(
             Spacer(modifier = Modifier.size(8.dp))
 
             Text(
-                text = "Gender :",
+                text = stringResource(id = R.string.Gender),
                 style = MaterialTheme.typography.body1,
                 color = MaterialTheme.colors.primary
             )
@@ -180,7 +182,7 @@ fun AdditionalSignInInfo(
                         )
                     )
                     Text(
-                        text = "Male",
+                        text = stringResource(id = R.string.Male_Gender),
                         style = MaterialTheme.typography.body1,
                         color = MaterialTheme.colors.onBackground,
                         modifier = Modifier.padding(start = 8.dp)
@@ -200,7 +202,7 @@ fun AdditionalSignInInfo(
                         )
                     )
                     Text(
-                        text = "Female",
+                        text = stringResource(id = R.string.Female_Gender),
                         color = MaterialTheme.colors.onBackground,
                         style = MaterialTheme.typography.body1,
                         modifier = Modifier.padding(start = 8.dp)
@@ -222,7 +224,7 @@ fun AdditionalSignInInfo(
 
                 LoadingTextButton(
                     showLoadingState = viewModel.showLoadingState,
-                    text = "Sign Up",
+                    stringResource(id = R.string.Sign_Up),
                     width = 140.dp,
                     height = 45.dp,
                     padding = 16.dp

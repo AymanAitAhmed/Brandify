@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -57,13 +58,13 @@ fun EmailSentDialog(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Email sent ",
+                    text = stringResource(id = R.string.Email_sent),
                     style = MaterialTheme.typography.h5,
                     color = MaterialTheme.colors.onBackground
                 )
                 Spacer(modifier = Modifier.size(8.dp))
                 Text(
-                    text = "Please check your email and reset your password then sign in again",
+                    text = stringResource(id = R.string.Email_Reset_password_dialog_message),
                     style = MaterialTheme.typography.body1,
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colors.onBackground
@@ -84,7 +85,7 @@ fun EmailSentDialog(
                 )
             ) {
 
-                Text(text = "Return ",
+                Text(text = stringResource(id = R.string.Return_SignIn),
                     color = MaterialTheme.colors.onBackground,
                     style = MaterialTheme.typography.h6,
                     modifier = Modifier.padding(start = 8.dp))

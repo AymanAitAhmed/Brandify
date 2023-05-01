@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -57,7 +58,7 @@ fun ResetPasswordView(
                     .size(200.dp),
             )
             Text(
-                text = "Reset Password",
+                text = stringResource(id = R.string.Reset_password),
                 style = MaterialTheme.typography.h4,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colors.onBackground,
@@ -65,7 +66,7 @@ fun ResetPasswordView(
             )
 
             Text(
-                text = "Enter the email associated with your account and we'll send an email with instructions to reset your password.",
+                text = stringResource(id = R.string.Reset_password_message),
                 style = MaterialTheme.typography.body1,
                 color = MaterialTheme.colors.onBackground,
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp)
@@ -78,7 +79,7 @@ fun ResetPasswordView(
 
             ) {
                 Text(
-                    text = "Email address : ",
+                    text = stringResource(id = R.string.Email_message),
                     color = MaterialTheme.colors.primary,
                     modifier = Modifier.padding(top = 30.dp)
                 )
@@ -90,7 +91,7 @@ fun ResetPasswordView(
                     viewModel.emailValue.value = it
                 },
                 shape = RoundedCornerShape(15.dp), label = {
-                    Text(text = "Email ", color = MaterialTheme.colors.onSecondary)
+                    Text(text = stringResource(id = R.string.Email), color = MaterialTheme.colors.onSecondary)
                 },
                 colors = TextFieldDefaults.textFieldColors(
                     textColor = MaterialTheme.colors.onBackground,
@@ -112,13 +113,13 @@ fun ResetPasswordView(
             ) {
                 LoadingTextButton(
                     showLoadingState = viewModel.showLoadingState,
-                    text = "Send",
+                    text = stringResource(id = R.string.Send),
                     width = 110.dp
                 ) {
                     viewModel.sendResetPasswordEmail()
                 }
                 Text(
-                    text = "return to Login?",
+                    text = stringResource(id = R.string.Return_to_Login),
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier
                         .padding(start = 16.dp)

@@ -1,6 +1,6 @@
 package lr.aym.projet_fin_detudes.views.verifyEmail
 
-import android.util.Log
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -73,14 +74,13 @@ fun VerifiyEmailView(
                     .clickable { viewModel.signOut() }
             )
             Text(
-                text = "Verify your email", color = MaterialTheme.colors.onBackground,
+                text = stringResource(id = R.string.Verify_email), color = MaterialTheme.colors.onBackground,
                 style = MaterialTheme.typography.h4,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 8.dp)
             )
             Text(
-                text = "An Email has been sent to ${viewModel.currentUser?.email}." +
-                        "please click the link in the email to verify your email address.",
+                text = stringResource(id = R.string.Verify_email_sent,"${viewModel.currentUser?.email}"),
                 color = MaterialTheme.colors.onBackground,
                 style = MaterialTheme.typography.body1,
                 textAlign = TextAlign.Center,
@@ -100,14 +100,14 @@ fun VerifiyEmailView(
             ) {
                 LoadingTextButton(
                     showLoadingState = viewModel.showLoadingStateContinue,
-                    text = "Continue",
+                    text = stringResource(id = R.string.Continue),
                     width = 150.dp
                 ) {
                     viewModel.isEmailVerified()
                     viewModel.showErrorMessage = true
                 }
                 Text(
-                    text = "Resend?",
+                    text = stringResource(id = R.string.Resend),
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier
                         .padding(start = 16.dp)

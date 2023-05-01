@@ -13,5 +13,31 @@
     <string name="or_login_with">Or login with</string>
     <string name="no_Account">Don\'t have an Account? Sign Up</string>
 
+    <string name="Sign_Up">Sign Up</string>
+    <string name="Username">Username </string>
+    <string name="Phone_Number">Phone Number </string>
+    <string name="Birth_date">Date of birth </string>
+    <string name="Gender"> Gender  </string>
+    <string name="Male_Gender"> Male </string>
+    <string name="Female_Gender"> Female </string>
+    <string name="Sign_Out">Sign out</string>
+
+    <string name="Email_Reset_password_dialog_message">Please check your email and reset your password then sign in again</string>
+    <string name="Email_sent">Email sent</string>
+    <string name="Return_SignIn">Return </string>
+    <string name="Reset_password">Reset Password</string>
+    <string name="Reset_password_message">Enter the email associated with your account and well send an email with instructions to reset your password</string>
+    <string name="Email_message">Email address</string>
+    <string name="Send">Send</string>
+    <string name="Return_to_Login">return to Login?</string>
+    <string name="oops">Oops..!</string>
+    <string name="link_facebook_account_message">"The email used in your facebook account has already an exsisting account. Please login to your original account first and then link it with your facebook</string>
+    <string name="Already_have_account_message">Already have an account?Sign In</string>
+    <string name="Verify_email">Verify your email</string>
+    <string name="Verify_email_sent">An Email has been sent to %1$s.please click the link in the email to verify your email address.</string>
+    <string name="Continue">Continue</string>
+    <string name="Resend">Resend?</string>
+    <string name="welcome_message">welcome%1$s </string>
+
 
 </resources>

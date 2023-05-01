@@ -1,6 +1,6 @@
 package lr.aym.projet_fin_detudes.views.verifyEmail
 
-import android.util.Log
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,7 +10,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import lr.aym.projet_fin_detudes.components.SignOut
 import lr.aym.projet_fin_detudes.model.emailPassword.EmailPasswordAuthRepository
-import lr.aym.projet_fin_detudes.model.ProfileRepository
 import lr.aym.projet_fin_detudes.model.SignOutResponse
 import lr.aym.projet_fin_detudes.model.google.ResponseGoogle
 import javax.inject.Inject

@@ -1,17 +1,14 @@
 package lr.aym.projet_fin_detudes.views.signIn
 
-import android.util.Log
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.AuthCredential
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import lr.aym.projet_fin_detudes.model.emailPassword.EmailPasswordAuthRepository
 import lr.aym.projet_fin_detudes.model.google.GoogleAuthRepository

@@ -1,6 +1,5 @@
 package lr.aym.projet_fin_detudes.views.signIn
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavController

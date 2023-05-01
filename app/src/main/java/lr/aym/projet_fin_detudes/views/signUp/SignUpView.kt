@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -61,7 +62,7 @@ fun SignUpView(
 
             )
             Text(
-                text = "Sign Up",
+                text = stringResource(id = R.string.Sign_Up),
                 style = MaterialTheme.typography.h2,
                 color = MaterialTheme.colors.primary,
                 modifier = Modifier.padding(8.dp)
@@ -69,7 +70,7 @@ fun SignUpView(
             )
 
             Text(
-                text = "Email :",
+                text = stringResource(id = R.string.Email),
                 color = MaterialTheme.colors.primary,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -88,12 +89,12 @@ fun SignUpView(
                     )
                 },
                 label = {
-                    Text(text = "Email")
+                    Text(stringResource(id = R.string.Email))
                 }
             )
 
             Text(
-                text = "Password :",
+                text = stringResource(id = R.string.Password),
                 color = MaterialTheme.colors.primary,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -125,7 +126,7 @@ fun SignUpView(
                     )
                 },
                 label = {
-                    Text(text = "Password")
+                    Text(text = stringResource(id = R.string.Password))
                 },
                 visualTransformation = if (viewModel.showHidePassword.value) VisualTransformation.None
                 else PasswordVisualTransformation()
@@ -136,7 +137,7 @@ fun SignUpView(
 
             LoadingTextButton(
                 showLoadingState = viewModel.showLoadingState,
-                text = "Sign Up",
+                text = stringResource(id = R.string.Sign_Up),
                 padding = 16.dp
             ) {
                 viewModel.onSignUpWithEmailAndPassword()
@@ -145,7 +146,7 @@ fun SignUpView(
 
 
             Text(
-                text = "Already have an account?Sign In",
+                text = stringResource(id = R.string.Already_have_account_message),
                 color = MaterialTheme.colors.onSecondary,
                 modifier = Modifier
                     .padding(top = 16.dp)

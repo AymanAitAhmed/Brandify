@@ -1,10 +1,6 @@
 package lr.aym.projet_fin_detudes.views.signIn
 
-import android.app.Activity.RESULT_OK
-import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.IntentSenderRequest
-import androidx.activity.result.contract.ActivityResultContracts
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,7 +14,6 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,14 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.google.android.gms.auth.api.identity.BeginSignInResult
-import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.GoogleAuthProvider.getCredential
 import lr.aym.projet_fin_detudes.R
 import lr.aym.projet_fin_detudes.components.LoadingTextButton
-import lr.aym.projet_fin_detudes.components.authErrors
-import lr.aym.projet_fin_detudes.model.emailPassword.ResponseEmailPassword
-import lr.aym.projet_fin_detudes.model.google.ResponseGoogle
 
 @Composable
 fun SignInView(
