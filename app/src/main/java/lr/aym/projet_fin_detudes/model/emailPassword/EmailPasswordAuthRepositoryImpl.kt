@@ -32,10 +32,10 @@ class EmailPasswordAuthRepositoryImpl @Inject constructor(
     ): SignUpResponse {
         return try {
             auth.createUserWithEmailAndPassword(email, password).await()
-            Log.d("signuptag", "Repo createUser success")
+            //Log.d("signuptag", "Repo createUser success")
             ResponseEmailPassword.Success(true)
         } catch (e: Exception) {
-            Log.d("signuptag", "$e")
+            //Log.d("signuptag", "$e")
             ResponseEmailPassword.Failure(e)
         }
     }
@@ -43,7 +43,7 @@ class EmailPasswordAuthRepositoryImpl @Inject constructor(
     override suspend fun sendEmailVerification(): SendEmailVerificationResponse {
         return try {
             auth.currentUser?.sendEmailVerification()?.await()
-            Log.d("signuptag", "SignUp email sent")
+            //Log.d("signuptag", "SignUp email sent")
             ResponseEmailPassword.Success(true)
         } catch (e: Exception) {
             ResponseEmailPassword.Failure(e)
@@ -65,13 +65,13 @@ class EmailPasswordAuthRepositoryImpl @Inject constructor(
     override suspend fun reloadFirebaseUser(): ReloadUserResponse {
         return try {
             auth.currentUser?.reload()?.await()
-            Log.d(
+            /*Log.d(
                 "isEmailVerified",
                 "reloadFirebaseUser: user reloaded ${auth.currentUser?.isEmailVerified}"
-            )
+            )*/
             ResponseEmailPassword.Success(true)
         } catch (e: Exception) {
-            Log.d("isEmailVerified", "reloadFirebaseUser Failure: ${e}")
+            //Log.d("isEmailVerified", "reloadFirebaseUser Failure: ${e}")
             ResponseEmailPassword.Failure(e)
         }
     }

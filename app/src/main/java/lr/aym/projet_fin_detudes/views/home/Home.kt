@@ -33,7 +33,7 @@ fun Home(
     when(val signOutResponse = viewModel.signOutResponse){
         is ResponseGoogle.Loading -> Unit
         is ResponseGoogle.Failure -> signOutResponse.apply {
-            Log.d("signoutFailure", "Home: ${e.message}")
+            //Log.d("signoutFailure", "Home: ${e.message}")
         }
         is ResponseGoogle.Success -> {
             val isUserSignedOut = signOutResponse.data

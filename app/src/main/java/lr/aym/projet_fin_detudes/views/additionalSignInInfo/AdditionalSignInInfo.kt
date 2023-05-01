@@ -25,7 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import lr.aym.projet_fin_detudes.components.LoadingTextButton
-import lr.aym.projet_fin_detudes.model.emailPassword.AddToFirestoreResponse
+import lr.aym.projet_fin_detudes.model.emailPassword.FirestoreResponse
 import java.util.*
 
 
@@ -235,15 +235,15 @@ fun AdditionalSignInInfo(
     }
 
     when (val addUserResponse = viewModel.addUserResponse) {
-        is AddToFirestoreResponse.Loading -> {
+        is FirestoreResponse.Loading -> {
             viewModel.showLoadingState.value = true
         }
 
-        is AddToFirestoreResponse.Failure -> addUserResponse.apply {
+        is FirestoreResponse.Failure -> addUserResponse.apply {
             viewModel.errorMessage.value = "${e.message}"
         }
 
-        is AddToFirestoreResponse.Success -> {
+        is FirestoreResponse.Success -> {
             val userSuccess = addUserResponse.data
             LaunchedEffect(key1 = userSuccess) {
                 if (userSuccess) {

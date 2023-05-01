@@ -19,9 +19,6 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,22 +28,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
-import com.facebook.login.LoginResult
-import com.facebook.login.widget.LoginButton
 import com.google.android.gms.auth.api.identity.BeginSignInResult
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.GoogleAuthProvider.getCredential
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import lr.aym.projet_fin_detudes.R
 import lr.aym.projet_fin_detudes.components.LoadingTextButton
 import lr.aym.projet_fin_detudes.components.authErrors
@@ -59,9 +45,7 @@ fun SignInView(
     navController: NavController,
     navigateToSignUpScreen: () -> Unit
 ) {
-    var signInWithGoogle = remember {
-        mutableStateOf(false)
-    }
+
 
     if (viewModel.showFacebookLinkAccountDialog.value) {
         FacebookLinkAccountError(showDialog = viewModel.showFacebookLinkAccountDialog)
@@ -179,7 +163,7 @@ fun SignInView(
                 text = stringResource(id = R.string.Sign_In),
                 padding = 16.dp
             ) {
-                signInWithGoogle.value = false
+                viewModel.signInWithGoogle.value = false
                 viewModel.onSignInWithEmailAndPasswordClick()
             }
 
@@ -197,16 +181,16 @@ fun SignInView(
                 FacebookLoginButton(
                     onAuthComplete = { navController.navigate("home_Screen") },
                     onAuthError = {
-                        Log.d("fbsignin", "${it.message}")
+                       // Log.d("fbsignin", "${it.message}")
                         if (it.message == "An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.") {
-                            Log.d("fbsignin", "executed")
+                            //Log.d("fbsignin", "executed")
                             viewModel.showFacebookLinkAccountDialog.value = true
                         }
 
                     })
 
                 IconButton(onClick = {
-                    signInWithGoogle.value = true
+                    viewModel.signInWithGoogle.value = true
                     viewModel.onSignInWithGoogleClick()
                 }) {
                     Icon(
@@ -232,98 +216,12 @@ fun SignInView(
 
     }
 
-    when (val signInResponse = viewModel.emailAndPasswordSignInResponse) {
-        is ResponseEmailPassword.Loading -> {
-            viewModel.showLoadingState.value = true
-        }
-
-        is ResponseEmailPassword.Success -> {
-            viewModel.showLoadingState.value = false
-            val isUserSignedIn = signInResponse.data
-            LaunchedEffect(key1 = isUserSignedIn) {
-                viewModel.reloadUser()
-                if (isUserSignedIn && !signInWithGoogle.value) {
-                    Log.d("isEmailVerified", "sign in View: ${viewModel.getEmailVerfiedState()}")
-                    if (viewModel.getEmailVerfiedState()) {
-                        Log.d("isUserVerified", "navigated from sign in view home")
-                        navController.navigate("home_Screen")
-                    } else {
-                        Log.d("isUserVerified", "navigated from sign in view verify")
-                        navController.navigate("verifiy_email_Screen")
-                    }
-                }
-            }
-        }
-
-        is ResponseEmailPassword.Failure -> signInResponse.apply {
-            viewModel.showLoadingState.value = false
-            Log.d("checkSignIN", authErrors(e.message))
-            viewModel.errorMessage.value = authErrors(e.message)
-
-        }
-    }
+    EmailPasswordSignIn(viewModel = viewModel, navController = navController)
 
 
     //Google authentication
-    val launcher =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                try {
-                    val credentials =
-                        viewModel.onTapClient.getSignInCredentialFromIntent(result.data)
-                    val googleIdToken = credentials.googleIdToken
-                    val googleCredentials = getCredential(googleIdToken, null)
-                    viewModel.signInWithGoogle(googleCredentials)
-                } catch (it: ApiException) {
-                    print(it)
-                }
-            }
-        }
 
-    fun launch(signInResult: BeginSignInResult) {
-        val intent = IntentSenderRequest.Builder(signInResult.pendingIntent.intentSender).build()
-        launcher.launch(intent)
-    }
-
-    when (val oneTapSignInResponse = viewModel.onTapGoogleSignInResponse) {
-        is ResponseGoogle.Loading -> {
-            Log.d("checkSignIN", "Loading:Google OneTapResponse ")
-        }
-
-        is ResponseGoogle.Success -> oneTapSignInResponse.data?.let {
-            LaunchedEffect(it) {
-                Log.d("checkSignIN", "Success:Google OneTapResponse ")
-                launch(it)
-            }
-        }
-
-        is ResponseGoogle.Failure -> LaunchedEffect(Unit) {
-            Log.d("checkSignIN", "Failure:Google OneTapResponse ${oneTapSignInResponse.e.message}")
-        }
-    }
-
-    when (val signInWithGoogleResponse = viewModel.signInWithGoogleResponse) {
-        is ResponseGoogle.Loading -> {
-            Log.d("checkSignIN", "Loading:signInGoogleResponse ")
-        }
-
-        is ResponseGoogle.Success -> signInWithGoogleResponse.data?.let { signedIn ->
-            LaunchedEffect(signedIn) {
-                if (signedIn) {
-                    Log.d("checkSignIN", "Success:signInGoogleResponse ")
-                    Log.d("navigatedFrom", "Sign In google")
-                    navController.navigate("home_Screen")
-                }
-            }
-        }
-
-        is ResponseGoogle.Failure -> LaunchedEffect(Unit) {
-            Log.d(
-                "checkSignIN",
-                "Failure:signInGoogleResponse ${signInWithGoogleResponse.e.message} "
-            )
-        }
-    }
+    GoogleSignIn(viewModel = viewModel, navController = navController)
 
 }
 

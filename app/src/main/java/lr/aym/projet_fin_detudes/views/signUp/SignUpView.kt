@@ -140,7 +140,7 @@ fun SignUpView(
                 padding = 16.dp
             ) {
                 viewModel.onSignUpWithEmailAndPassword()
-                Log.d("signuptag", "SignUp button clicked")
+                //Log.d("signuptag", "SignUp button clicked")
             }
 
 
@@ -174,7 +174,7 @@ fun SignUpView(
             LaunchedEffect(key1 = isUserSignedUp) {
                 if (isUserSignedUp) {
                     viewModel.sendEmailVerification()
-                    Log.d("signuptag", "SignUp verification triggered")
+                    //Log.d("signuptag", "SignUp verification triggered")
                     navController.navigate("verifiy_email_Screen")
                 }
             }

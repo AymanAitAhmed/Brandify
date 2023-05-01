@@ -65,14 +65,19 @@ class MainActivity : ComponentActivity() {
                             "signIn_Screen"
                         }else{
                             if (viewModel.isEmailVerified){
-                                Log.d("navigatedFrom", "MainActivity")
-                                "home_Screen"
+                                if (viewModel.isUserInfoExist()){
+                                    Log.d("navigatedFrom", "MainActivity")
+                                    "home_Screen"
+                                }else{
+                                    "additional_info_signUp"
+                                }
+
                             }else{
                                 "verifiy_email_Screen"
                             }
                         }
 
-                    Log.d("isUserVerified", "onCreate: $startDestination")
+                    //Log.d("isUserVerified", "onCreate: $startDestination")
 
                     NavHost(navController = navController, startDestination = "splash_Screen") {
 

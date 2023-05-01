@@ -43,7 +43,7 @@ class FacebookAuthRepositoryImpl @Inject constructor(
                         auth.signInWithCredential(credential).await()
 
                     } catch (e: Exception) {
-                        Log.d("fbsignin", "failed ${e}")
+                        //Log.d("fbsignin", "failed ${e}")
 
                     }
                 }

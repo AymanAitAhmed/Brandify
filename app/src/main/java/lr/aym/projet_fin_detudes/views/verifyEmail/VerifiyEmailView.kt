@@ -126,7 +126,7 @@ fun VerifiyEmailView(
                 }
             }
             if (viewModel.showErrorMessage && !viewModel.verifiedEmail) {
-                Log.d("verify error", "Verifiy email first")
+                //Log.d("verify error", "Verifiy email first")
                 viewModel.errorMessage.value = "error: please verify you email first."
             }
 

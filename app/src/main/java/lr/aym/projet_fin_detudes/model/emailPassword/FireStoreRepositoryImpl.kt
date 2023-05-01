@@ -18,9 +18,9 @@ class FireStoreRepositoryImpl @Inject constructor(
     override suspend fun addUserToFireStore(user: User): addUserResponse {
         return try {
             db.collection("users").add(user).await()
-            AddToFirestoreResponse.Success(true)
+            FirestoreResponse.Success(true)
         } catch (e: Exception) {
-            AddToFirestoreResponse.Failure(e)
+            FirestoreResponse.Failure(e)
         }
 
     }
@@ -29,11 +29,30 @@ class FireStoreRepositoryImpl @Inject constructor(
         return try {
             val user =
                 auth.currentUser?.uid?.let { db.collection("users").document(it).get().await() }
-            AddToFirestoreResponse.Success(auth.currentUser?.uid?.let {
+            FirestoreResponse.Success(auth.currentUser?.uid?.let {
                 user?.toObject(User::class.java)?.copy(UID = it)
             })
         } catch (e: Exception) {
-            AddToFirestoreResponse.Failure(e)
+            FirestoreResponse.Failure(e)
         }
+    }
+
+    override suspend fun checkUserExistenceFireStore(): userExistResponse {
+
+        return try {
+            val user = auth.currentUser?.uid?.let {
+                db.collection("users").document(it).get().await()
+            }
+            if (user?.exists() == true){
+                FirestoreResponse.Success(true)
+            }
+            else{
+                FirestoreResponse.Success(false)
+            }
+
+        }catch (e:Exception){
+            FirestoreResponse.Failure(e)
+        }
+
     }
 }

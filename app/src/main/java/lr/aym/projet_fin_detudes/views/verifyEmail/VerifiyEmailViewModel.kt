@@ -40,7 +40,7 @@ class VerifiyEmailViewModel @Inject constructor(
         viewModelScope.launch {
             emailPasswordAuthRepository.reloadFirebaseUser()
             verifiedEmail = emailPasswordAuthRepository.currentUser?.isEmailVerified ?: false
-            Log.d("isEmailVerified", "isEmailVerified $verifiedEmail")
+            //Log.d("isEmailVerified", "isEmailVerified $verifiedEmail")
             showLoadingStateContinue.value = false
         }
     }

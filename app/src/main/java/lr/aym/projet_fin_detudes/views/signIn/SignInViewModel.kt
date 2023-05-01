@@ -3,6 +3,7 @@ package lr.aym.projet_fin_detudes.views.signIn
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -46,6 +47,8 @@ class SignInViewModel @Inject constructor(
     var errorMessage = mutableStateOf("")
 
     var showFacebookLinkAccountDialog = mutableStateOf(false)
+    var signInWithGoogle = mutableStateOf(false)
+
 
 
     fun onShowHideEyeClick() {
@@ -55,7 +58,7 @@ class SignInViewModel @Inject constructor(
     suspend fun getEmailVerfiedState():Boolean{
         return suspendCoroutine {continuation ->
             val isEmailVerified = emailPasswordRepo.currentUser?.isEmailVerified?:false
-            Log.d("isEmailVerified", "getEmailVerfiedState: $isEmailVerified")
+            //Log.d("isEmailVerified", "getEmailVerfiedState: $isEmailVerified")
             continuation.resume(isEmailVerified)
         }
     }

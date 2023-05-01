@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import lr.aym.projet_fin_detudes.model.User
-import lr.aym.projet_fin_detudes.model.emailPassword.AddToFirestoreResponse
+import lr.aym.projet_fin_detudes.model.emailPassword.FirestoreResponse
 import lr.aym.projet_fin_detudes.model.emailPassword.FireStoreRepository
 import lr.aym.projet_fin_detudes.model.emailPassword.addUserResponse
 import javax.inject.Inject
@@ -25,14 +25,14 @@ class AdditionalSignUpInfoViewModel @Inject constructor(
     var showLoadingState = mutableStateOf(false)
 
     var addUserResponse by mutableStateOf<addUserResponse>(
-        AddToFirestoreResponse.Success(false)
+        FirestoreResponse.Success(false)
     )
 
     val errorMessage = mutableStateOf("")
 
 
     fun addUserToFireStore() {
-        addUserResponse = AddToFirestoreResponse.Loading
+        addUserResponse = FirestoreResponse.Loading
         viewModelScope.launch {
             addUserResponse = fireStoreRepo.addUserToFireStore(
                 User(
