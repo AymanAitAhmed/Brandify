@@ -1,4 +1,4 @@
-package lr.aym.projet_fin_detudes.views.signIn
+package lr.aym.projet_fin_detudes.views.sign_in_up_process.signIn
 
 import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -10,6 +10,7 @@ import androidx.navigation.NavController
 import com.google.android.gms.auth.api.identity.BeginSignInResult
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
+import lr.aym.projet_fin_detudes.components.Screens
 import lr.aym.projet_fin_detudes.model.google.ResponseGoogle
 
 
@@ -66,7 +67,11 @@ fun GoogleSignIn(
                 if (signedIn) {
                     //Log.d("checkSignIN", "Success:signInGoogleResponse ")
                     //Log.d("navigatedFrom", "Sign In google")
-                    navController.navigate("home_Screen")
+                    navController.navigate(Screens.HomeScreen.route){
+                        popUpTo(route = Screens.SignInScreen.route){
+                            inclusive = true
+                        }
+                    }
                 }
             }
         }

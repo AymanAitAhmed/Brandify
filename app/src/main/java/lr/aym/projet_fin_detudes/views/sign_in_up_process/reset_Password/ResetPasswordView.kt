@@ -1,4 +1,4 @@
-package lr.aym.projet_fin_detudes.views.reset_Password
+package lr.aym.projet_fin_detudes.views.sign_in_up_process.reset_Password
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -22,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import lr.aym.projet_fin_detudes.R
 import lr.aym.projet_fin_detudes.components.LoadingTextButton
+import lr.aym.projet_fin_detudes.components.Screens
 import lr.aym.projet_fin_detudes.model.emailPassword.ResponseEmailPassword
 
 
@@ -124,7 +125,11 @@ fun ResetPasswordView(
                     modifier = Modifier
                         .padding(start = 16.dp)
                         .clickable {
-                            navController.navigate("signIn_Screen")
+                            navController.navigate(Screens.SignInScreen.route){
+                                popUpTo(route = Screens.ResetPasswordScreen.route){
+                                    inclusive = true
+                                }
+                            }
                         },
                     color = MaterialTheme.colors.onSecondary
                 )

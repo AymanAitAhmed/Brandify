@@ -50,7 +50,8 @@ class AppModule {
 
     @Provides
     fun provideEmailAuthRepository(): EmailPasswordAuthRepository = EmailPasswordAuthRepositoryImpl(
-        auth = provideFirebaseAuth()
+        auth = provideFirebaseAuth(),
+        fireStoreRepository = provideFirestoreRepository()
     )
 
     @Provides

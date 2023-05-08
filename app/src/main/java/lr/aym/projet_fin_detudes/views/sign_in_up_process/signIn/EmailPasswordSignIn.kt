@@ -1,8 +1,9 @@
-package lr.aym.projet_fin_detudes.views.signIn
+package lr.aym.projet_fin_detudes.views.sign_in_up_process.signIn
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavController
+import lr.aym.projet_fin_detudes.components.Screens
 import lr.aym.projet_fin_detudes.components.authErrors
 import lr.aym.projet_fin_detudes.model.emailPassword.ResponseEmailPassword
 
@@ -25,22 +26,37 @@ fun EmailPasswordSignIn(
                 if (isUserSignedIn && !viewModel.signInWithGoogle.value) {
                     //Log.d("isEmailVerified", "sign in View: ${viewModel.getEmailVerfiedState()}")
                     if (viewModel.getEmailVerfiedState()) {
+                        if (viewModel.doesUserExist){
                         //Log.d("isUserVerified", "navigated from sign in view home")
-                        navController.navigate("home_Screen")
+                        navController.navigate(Screens.HomeScreen.route, builder = {
+                            popUpTo(Screens.SignInScreen.route) {
+                                inclusive = true
+                            }
+                        })
+                        }
+                        else{
+                            navController.navigate(Screens.AdditionalInfoScreen.route, builder = {
+                                popUpTo(Screens.SignInScreen.route) {
+                                    inclusive = true
+                                }
+                            })
+                        }
                     } else {
                         //Log.d("isUserVerified", "navigated from sign in view verify")
-                        navController.navigate("verifiy_email_Screen")
+                        navController.navigate(Screens.VerifyEmailScreen.route, builder = {
+                            popUpTo(Screens.SignInScreen.route) {
+                                inclusive = true
+                            }
+                        })
                     }
                 }
             }
         }
-
         is ResponseEmailPassword.Failure -> signInResponse.apply {
-            viewModel.showLoadingState.value = false
-            //Log.d("checkSignIN", authErrors(e.message))
-            viewModel.errorMessage.value = authErrors(e.message)
+                viewModel.showLoadingState.value = false
+                //Log.d("checkSignIN", authErrors(e.message))
+                viewModel.errorMessage.value = authErrors(e.message)
 
         }
     }
-
 }

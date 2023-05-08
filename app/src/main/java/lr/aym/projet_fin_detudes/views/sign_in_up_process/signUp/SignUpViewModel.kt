@@ -1,4 +1,4 @@
-package lr.aym.projet_fin_detudes.views.signUp
+package lr.aym.projet_fin_detudes.views.sign_in_up_process.signUp
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import lr.aym.projet_fin_detudes.R
+import lr.aym.projet_fin_detudes.components.UiText
 import lr.aym.projet_fin_detudes.model.emailPassword.EmailPasswordAuthRepository
 import lr.aym.projet_fin_detudes.model.emailPassword.ResponseEmailPassword
 import lr.aym.projet_fin_detudes.model.SendEmailVerificationResponse
@@ -19,8 +21,11 @@ class SignUpViewModel @Inject constructor(
 ) : ViewModel() {
 
     var emailTextFieldValue = mutableStateOf("")
+    var emailErrorMessage = mutableStateOf(UiText.StringResource(R.string.empty_string))
     var passwordTextFieldValue = mutableStateOf("")
+    var passwordErrorMessage = mutableStateOf(UiText.StringResource(R.string.empty_string))
     var confirmPasswordTextFieldValue = mutableStateOf("")
+    var confirmErrorMessage = mutableStateOf(UiText.StringResource(R.string.empty_string))
 
     var signUpResponseEmailPassword by mutableStateOf<SignUpResponse>(
         ResponseEmailPassword.Success(
@@ -38,9 +43,7 @@ class SignUpViewModel @Inject constructor(
     var showHidePassword = mutableStateOf(false)
     var showLoadingState = mutableStateOf(false)
     var errorMessage = mutableStateOf("")
-    var emailErrorMessage = mutableStateOf("")
-    var passwordErrorMessage = mutableStateOf("")
-    var confirmErrorMessage = mutableStateOf("")
+
 
     fun onShowHideEyeClick() {
         showHidePassword.value = !showHidePassword.value
@@ -56,34 +59,34 @@ class SignUpViewModel @Inject constructor(
 
     fun emailChecks():Boolean{
         return if (emailTextFieldValue.value.isBlank()){
-            emailErrorMessage.value = "Please enter your email"
+            emailErrorMessage.value = UiText.StringResource(R.string.empty_email)
             false
         }else if (!emailTextFieldValue.value.contains("@")){
-            emailErrorMessage.value = "Please enter a valid email"
+            emailErrorMessage.value = UiText.StringResource(R.string.non_valid_email)
             false
         }else{
-            emailErrorMessage.value = ""
+            emailErrorMessage.value = UiText.StringResource(R.string.empty_string)
             true
         }
     }
     fun passwordChecks() :Boolean {
 
         if (passwordTextFieldValue.value.length < 8) {
-            passwordErrorMessage.value = "Password must have 8 charachters at least"
+            passwordErrorMessage.value = UiText.StringResource(R.string.small_password_length)
             return false
         } else
             if (!passwordTextFieldValue.value.any { it.isDigit() } ||
                 !passwordTextFieldValue.value.any { it.isLetter() }
             ) {
-                passwordErrorMessage.value = "Password must have at least one character and one digit"
+                passwordErrorMessage.value = UiText.StringResource(R.string.password_no_char_digit)
                 return false
             } else if (passwordTextFieldValue.value != confirmPasswordTextFieldValue.value) {
-                passwordErrorMessage.value = ""
-                confirmErrorMessage.value = "Passwords do not match"
+                passwordErrorMessage.value = UiText.StringResource(R.string.empty_string)
+                confirmErrorMessage.value = UiText.StringResource(R.string.mismatch_passwords)
                 return false
             } else {
-                passwordErrorMessage.value = ""
-                confirmErrorMessage.value = ""
+                passwordErrorMessage.value = UiText.StringResource(R.string.empty_string)
+                confirmErrorMessage.value = UiText.StringResource(R.string.empty_string)
                 return true
             }
     }

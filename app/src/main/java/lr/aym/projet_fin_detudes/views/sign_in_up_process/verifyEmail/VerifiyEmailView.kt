@@ -1,4 +1,4 @@
-package lr.aym.projet_fin_detudes.views.verifyEmail
+package lr.aym.projet_fin_detudes.views.sign_in_up_process.verifyEmail
 
 
 import androidx.compose.foundation.Image
@@ -32,6 +32,7 @@ import androidx.navigation.NavController
 import com.google.firebase.auth.FacebookAuthProvider
 import lr.aym.projet_fin_detudes.R
 import lr.aym.projet_fin_detudes.components.LoadingTextButton
+import lr.aym.projet_fin_detudes.components.Screens
 
 @Composable
 fun VerifiyEmailView(
@@ -71,7 +72,7 @@ fun VerifiyEmailView(
                 modifier = Modifier
                     .size(150.dp)
                     .clip(shape = CircleShape)
-                    .clickable { viewModel.signOut() }
+
             )
             Text(
                 text = stringResource(id = R.string.Verify_email), color = MaterialTheme.colors.onBackground,
@@ -120,9 +121,17 @@ fun VerifiyEmailView(
 
             LaunchedEffect(key1 = viewModel.verifiedEmail) {
                 if (viewModel.verifiedEmail && viewModel.facebookProvider.value) {
-                    navController.navigate("home_Screen")
+                    navController.navigate(Screens.HomeScreen.route){
+                        popUpTo(route = Screens.VerifyEmailScreen.route){
+                            inclusive = true
+                        }
+                    }
                 }else if (viewModel.verifiedEmail){
-                    navController.navigate("additional_info_signUp")
+                    navController.navigate(Screens.AdditionalInfoScreen.route){
+                        popUpTo(route = Screens.VerifyEmailScreen.route){
+                            inclusive = true
+                        }
+                    }
                 }
             }
             if (viewModel.showErrorMessage && !viewModel.verifiedEmail) {

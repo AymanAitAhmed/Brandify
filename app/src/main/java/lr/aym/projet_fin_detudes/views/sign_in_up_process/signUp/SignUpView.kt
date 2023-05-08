@@ -1,4 +1,4 @@
-package lr.aym.projet_fin_detudes.views.signUp
+package lr.aym.projet_fin_detudes.views.sign_in_up_process.signUp
 
 import android.util.Log
 import androidx.compose.foundation.clickable
@@ -35,6 +35,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import lr.aym.projet_fin_detudes.R
 import lr.aym.projet_fin_detudes.components.LoadingTextButton
+import lr.aym.projet_fin_detudes.components.Screens
+import lr.aym.projet_fin_detudes.components.UiText
 import lr.aym.projet_fin_detudes.components.authErrors
 import lr.aym.projet_fin_detudes.model.emailPassword.ResponseEmailPassword
 
@@ -94,10 +96,10 @@ fun SignUpView(
                 }
             )
 
-            if (viewModel.emailErrorMessage.value != ""){
+            if (viewModel.emailErrorMessage.value.asString() != UiText.StringResource(R.string.empty_string).asString()){
                 Row(horizontalArrangement = Arrangement.Start, modifier = Modifier.fillMaxWidth(0.7f)) {
                     Text(
-                        text = viewModel.emailErrorMessage.value,
+                        text = viewModel.emailErrorMessage.value.asString(),
                         color = Color.Red,
                         fontSize = 10.sp
                     )
@@ -145,10 +147,10 @@ fun SignUpView(
 
             )
 
-            if (viewModel.passwordErrorMessage.value != ""){
+            if (viewModel.passwordErrorMessage.value.asString() != UiText.StringResource(R.string.empty_string).asString()){
                 Row(horizontalArrangement = Arrangement.Start, modifier = Modifier.fillMaxWidth(0.7f)) {
                     Text(
-                        text = viewModel.passwordErrorMessage.value,
+                        text = viewModel.passwordErrorMessage.value.asString(),
                         color = Color.Red,
                         fontSize = 10.sp
                     )
@@ -183,10 +185,10 @@ fun SignUpView(
 
             )
 
-            if (viewModel.confirmErrorMessage.value != ""){
+            if (viewModel.confirmErrorMessage.value.asString() != UiText.StringResource(R.string.empty_string).asString()){
                 Row(horizontalArrangement = Arrangement.Start, modifier = Modifier.fillMaxWidth(0.7f)) {
                     Text(
-                        text = viewModel.confirmErrorMessage.value,
+                        text = viewModel.confirmErrorMessage.value.asString(),
                         color = Color.Red,
                         fontSize = 10.sp
                     )
@@ -245,7 +247,11 @@ fun SignUpView(
                 if (isUserSignedUp) {
                     viewModel.sendEmailVerification()
                     //Log.d("signuptag", "SignUp verification triggered")
-                    navController.navigate("verifiy_email_Screen")
+                    navController.navigate(Screens.VerifyEmailScreen.route){
+                        popUpTo(route = Screens.SignUpScreen.route){
+                            inclusive = true
+                        }
+                    }
                 }
             }
         }

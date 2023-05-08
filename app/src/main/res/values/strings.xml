@@ -5,17 +5,18 @@
     <string name="fb_login_protocol_scheme">fb234541415710679</string>
     <string name="facebook_client_token">8f884056a0afffe81e4b157c12e237b4</string>
 
+    <string name="empty_string">empty</string>
 
     <string name="Sign_In">Sign In</string>
     <string name="Email">Email</string>
     <string name="Password">Password</string>
-    <string name="Confirm_Password"> Confirm password</string>
     <string name="Forgot_password">Forgot password?reset</string>
     <string name="or_login_with">Or login with</string>
     <string name="no_Account">Don\'t have an Account? Sign Up</string>
 
+    <string name="Confirm_Password"> Confirm password</string>
     <string name="Sign_Up">Sign Up</string>
-    <string name="mismatch_passwords">Passwords do not match</string>
+    <string name="mismatch_passwords">Passwords do not match.</string>
     <string name="Username">Username </string>
     <string name="Phone_Number">Phone Number </string>
     <string name="Birth_date">Date of birth </string>
@@ -40,6 +41,23 @@
     <string name="Continue">Continue</string>
     <string name="Resend">Resend?</string>
     <string name="welcome_message">welcome%1$s </string>
+
+
+    <string name="empty_username_error">Please enter a username.</string>
+    <string name="short_username_length">Username must be at least 3 characters.</string>
+    <string name="empty_phone_number">Please enter a phone number.</string>
+    <string name="wrong_phone_number_length">Phone number must have exacly 10 digits.</string>
+    <string name="empty_birthdate">Please enter a your date of birth.</string>
+    <string name="too_young">Too young. You have to be at least 16 years old.</string>
+    <string name="empty_gender">Please select your Gender.</string>
+    <string name="empty_email">Please enter your email.</string>
+    <string name="non_valid_email">Please enter a valid email.</string>
+    <string name="small_password_length">Password must have 8 charachters at least.</string>
+    <string name="password_no_char_digit">Password must have at least one character and one digit.</string>
+    <string name="Description">Description</string>
+    <string name="Add_Post">Add Post</string>
+    <string name="Done">Done</string>
+    <string name="Description_Placeholder">Write something about your product.</string>
 
 
 </resources>

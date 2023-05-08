@@ -1,4 +1,4 @@
-package lr.aym.projet_fin_detudes.views.additionalSignInInfo
+package lr.aym.projet_fin_detudes.views.sign_in_up_process.additionalSignInInfo
 
 import android.os.Build
 import androidx.annotation.RequiresApi

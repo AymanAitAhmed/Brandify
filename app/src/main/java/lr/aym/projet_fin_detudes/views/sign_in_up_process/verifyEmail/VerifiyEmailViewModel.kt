@@ -1,4 +1,4 @@
-package lr.aym.projet_fin_detudes.views.verifyEmail
+package lr.aym.projet_fin_detudes.views.sign_in_up_process.verifyEmail
 
 
 import androidx.compose.runtime.getValue

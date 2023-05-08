@@ -1,4 +1,4 @@
-package lr.aym.projet_fin_detudes.views.reset_Password
+package lr.aym.projet_fin_detudes.views.sign_in_up_process.reset_Password
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

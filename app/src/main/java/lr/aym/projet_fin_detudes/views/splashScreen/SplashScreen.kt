@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.delay
+import lr.aym.projet_fin_detudes.components.Screens
 
 @Composable
 fun SplashScreen(
@@ -23,7 +24,11 @@ fun SplashScreen(
 
     LaunchedEffect(key1 = 1){
         delay(3000L)
-        navController.navigate(startDestination)
+        navController.navigate(startDestination){
+            popUpTo(Screens.SplashScreen.route){
+                inclusive=true
+            }
+        }
     }
     Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
         Icon(

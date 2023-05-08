@@ -1,4 +1,4 @@
-package lr.aym.projet_fin_detudes.views.signIn
+package lr.aym.projet_fin_detudes.views.sign_in_up_process.signIn
 
 
 import androidx.compose.foundation.clickable
@@ -27,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import lr.aym.projet_fin_detudes.R
 import lr.aym.projet_fin_detudes.components.LoadingTextButton
+import lr.aym.projet_fin_detudes.components.Screens
 
 @Composable
 fun SignInView(
@@ -139,7 +140,7 @@ fun SignInView(
                     modifier = Modifier
                         .padding(top = 4.dp, bottom = 4.dp)
                         .clickable {
-                            navController.navigate("reset_password_Screen")
+                            navController.navigate(Screens.ResetPasswordScreen.route)
                         }
                 )
             }
@@ -169,7 +170,7 @@ fun SignInView(
             ) {
 
                 FacebookLoginButton(
-                    onAuthComplete = { navController.navigate("home_Screen") },
+                    onAuthComplete = { navController.navigate(Screens.HomeScreen.route) },
                     onAuthError = {
                         // Log.d("fbsignin", "${it.message}")
                         if (it.message == "An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.") {

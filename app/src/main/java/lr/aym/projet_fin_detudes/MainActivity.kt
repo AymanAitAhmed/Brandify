@@ -19,14 +19,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import lr.aym.projet_fin_detudes.components.Screens
 import lr.aym.projet_fin_detudes.ui.theme.Projet_fin_detudesTheme
-import lr.aym.projet_fin_detudes.views.additionalSignInInfo.AdditionalSignInInfo
+import lr.aym.projet_fin_detudes.views.home.AddPostScreen
+import lr.aym.projet_fin_detudes.views.home.AddPostViewModel
 import lr.aym.projet_fin_detudes.views.home.Home
-import lr.aym.projet_fin_detudes.views.reset_Password.ResetPasswordView
-import lr.aym.projet_fin_detudes.views.signIn.SignInView
-import lr.aym.projet_fin_detudes.views.signUp.SignUpView
+import lr.aym.projet_fin_detudes.views.sign_in_up_process.additionalSignInInfo.AdditionalSignInInfo
+import lr.aym.projet_fin_detudes.views.sign_in_up_process.reset_Password.ResetPasswordView
+import lr.aym.projet_fin_detudes.views.sign_in_up_process.signIn.SignInView
+import lr.aym.projet_fin_detudes.views.sign_in_up_process.signUp.SignUpView
 import lr.aym.projet_fin_detudes.views.splashScreen.SplashScreen
-import lr.aym.projet_fin_detudes.views.verifyEmail.VerifiyEmailView
+import lr.aym.projet_fin_detudes.views.sign_in_up_process.verifyEmail.VerifiyEmailView
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
@@ -51,7 +54,8 @@ class MainActivity : ComponentActivity() {
         }
 
         super.onCreate(savedInstanceState)
-        val viewModel by viewModels<MainViewModel>()
+        val mainViewModel by viewModels<MainViewModel>()
+        val addPostViewModel by viewModels<AddPostViewModel>()
         setContent {
             val navController = rememberNavController()
             Projet_fin_detudesTheme {
@@ -60,55 +64,58 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    val isUserSignedOut = viewModel.getAuthState().collectAsStateWithLifecycle().value
+                    val isUserSignedOut = mainViewModel.getAuthState().collectAsStateWithLifecycle().value
                     val startDestination = if (isUserSignedOut){
-                            "signIn_Screen"
+                            Screens.SignInScreen.route
                         }else{
-                            if (viewModel.isEmailVerified){
-                                if (viewModel.isUserInfoExist()){
+                            if (mainViewModel.isEmailVerified){
+                                if (mainViewModel.doesUserExist){
                                     Log.d("navigatedFrom", "MainActivity")
-                                    "home_Screen"
+                                    Screens.HomeScreen.route
                                 }else{
-                                    "additional_info_signUp"
+                                    Screens.AdditionalInfoScreen.route
                                 }
 
                             }else{
-                                "verifiy_email_Screen"
+                                Screens.VerifyEmailScreen.route
                             }
                         }
 
                     //Log.d("isUserVerified", "onCreate: $startDestination")
 
-                    NavHost(navController = navController, startDestination = "splash_Screen") {
+                    NavHost(navController = navController, startDestination = Screens.SplashScreen.route) {
 
-                        composable("splash_Screen"){
+                        composable(Screens.SplashScreen.route){
                             SplashScreen (navController, startDestination)
                         }
 
-                        composable(route = "signIn_Screen") {
+                        composable(route = Screens.SignInScreen.route) {
                             SignInView(navigateToSignUpScreen = {
-                                navController.navigate("signUp_Screen")
+                                navController.navigate(Screens.SignUpScreen.route)
                             }, navController = navController)
                         }
-                        composable(route = "reset_password_Screen"){
+                        composable(route = Screens.ResetPasswordScreen.route){
                             ResetPasswordView(navController = navController)
                         }
-                        composable(route = "signUp_Screen") {
+                        composable(route = Screens.SignUpScreen.route) {
                             SignUpView(
                                 navigateToSignInScreen = {
-                                    navController.navigate("signIn_Screen")
+                                    navController.navigate(Screens.SignInScreen.route)
                                 }, navController = navController
                             )
                         }
-                        composable(route = "additional_info_signUp"){
+                        composable(route = Screens.AdditionalInfoScreen.route){
                             AdditionalSignInInfo(navController = navController)
                         }
 
-                        composable("verifiy_email_Screen") {
+                        composable(route = Screens.VerifyEmailScreen.route) {
                             VerifiyEmailView(navController = navController)
                         }
-                        composable("home_Screen") {
+                        composable(route = Screens.HomeScreen.route) {
                             Home(navController = navController)
+                        }
+                        composable(route = Screens.AddPostScreen.route){
+                            AddPostScreen(addPostViewModel,navController)
                         }
 
 

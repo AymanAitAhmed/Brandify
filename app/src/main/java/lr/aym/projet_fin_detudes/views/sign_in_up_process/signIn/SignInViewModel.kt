@@ -1,4 +1,4 @@
-package lr.aym.projet_fin_detudes.views.signIn
+package lr.aym.projet_fin_detudes.views.sign_in_up_process.signIn
 
 
 import androidx.compose.runtime.getValue
@@ -45,6 +45,8 @@ class SignInViewModel @Inject constructor(
 
     var showFacebookLinkAccountDialog = mutableStateOf(false)
     var signInWithGoogle = mutableStateOf(false)
+
+    val doesUserExist = emailPasswordRepo.isUserInfoExist(viewModelScope)
 
 
 

@@ -1,4 +1,4 @@
-package lr.aym.projet_fin_detudes.views.additionalSignInInfo
+package lr.aym.projet_fin_detudes.views.sign_in_up_process.additionalSignInInfo
 
 import androidx.compose.runtime.Composable
 import android.os.Build
@@ -27,6 +27,8 @@ import androidx.navigation.NavController
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import lr.aym.projet_fin_detudes.R
 import lr.aym.projet_fin_detudes.components.LoadingTextButton
+import lr.aym.projet_fin_detudes.components.Screens
+import lr.aym.projet_fin_detudes.components.UiText
 import lr.aym.projet_fin_detudes.model.emailPassword.FirestoreResponse
 import java.util.*
 
@@ -98,13 +100,13 @@ fun AdditionalSignInInfo(
                     backgroundColor = MaterialTheme.colors.background
                 ),
             )
-            if (viewModel.usernameErrorMessage.value != "") {
+            if (viewModel.usernameErrorMessage.value.asString() != UiText.StringResource(R.string.empty_string).asString()) {
                 Row(
                     horizontalArrangement = Arrangement.Start,
                     modifier = Modifier.fillMaxWidth(0.7f)
                 ) {
                     Text(
-                        text = viewModel.usernameErrorMessage.value,
+                        text = viewModel.usernameErrorMessage.value.asString(),
                         color = Color.Red,
                         fontSize = 10.sp
                     )
@@ -138,13 +140,13 @@ fun AdditionalSignInInfo(
                 ),
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Phone)
             )
-            if (viewModel.phoneNumberErrorMessage.value != "") {
+            if (viewModel.phoneNumberErrorMessage.value.asString() != UiText.StringResource(R.string.empty_string).asString()) {
                 Row(
                     horizontalArrangement = Arrangement.Start,
                     modifier = Modifier.fillMaxWidth(0.7f)
                 ) {
                     Text(
-                        text = viewModel.phoneNumberErrorMessage.value,
+                        text = viewModel.phoneNumberErrorMessage.value.asString(),
                         color = Color.Red,
                         fontSize = 10.sp
                     )
@@ -192,13 +194,13 @@ fun AdditionalSignInInfo(
 
             )
 
-            if (viewModel.dateOfBirthErrorMessage.value != "") {
+            if (viewModel.dateOfBirthErrorMessage.value.asString() != UiText.StringResource(R.string.empty_string).asString()) {
                 Row(
                     horizontalArrangement = Arrangement.Start,
                     modifier = Modifier.fillMaxWidth(0.7f)
                 ) {
                     Text(
-                        text = viewModel.dateOfBirthErrorMessage.value,
+                        text = viewModel.dateOfBirthErrorMessage.value.asString(),
                         color = Color.Red,
                         fontSize = 10.sp
                     )
@@ -260,13 +262,13 @@ fun AdditionalSignInInfo(
                 }
             }
 
-            if (viewModel.genderErrorMessage.value != "") {
+            if (viewModel.genderErrorMessage.value.asString() != UiText.StringResource(R.string.empty_string).asString()) {
                 Row(
                     horizontalArrangement = Arrangement.Start,
                     modifier = Modifier.fillMaxWidth(0.7f)
                 ) {
                     Text(
-                        text = viewModel.genderErrorMessage.value,
+                        text = viewModel.genderErrorMessage.value.asString(),
                         color = Color.Red,
                         fontSize = 10.sp
                     )
@@ -285,8 +287,6 @@ fun AdditionalSignInInfo(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-
-
                 LoadingTextButton(
                     showLoadingState = viewModel.showLoadingState,
                     stringResource(id = R.string.Sign_Up),
@@ -302,7 +302,6 @@ fun AdditionalSignInInfo(
                         viewModel.dateChecks() && viewModel.genderChecks()){
                         viewModel.addUserToFireStore()
                     }
-
                 }
             }
         }
@@ -321,7 +320,11 @@ fun AdditionalSignInInfo(
             val userSuccess = addUserResponse.data
             LaunchedEffect(key1 = userSuccess) {
                 if (userSuccess) {
-                    navController.navigate("home_Screen")
+                    navController.navigate(Screens.HomeScreen.route){
+                        popUpTo(route = Screens.AdditionalInfoScreen.route){
+                            inclusive = true
+                        }
+                    }
                 }
             }
         }
