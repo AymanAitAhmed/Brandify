@@ -1,5 +1,6 @@
 package lr.aym.projet_fin_detudes.views.sign_in_up_process.signIn
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavController
@@ -26,7 +27,8 @@ fun EmailPasswordSignIn(
                 if (isUserSignedIn && !viewModel.signInWithGoogle.value) {
                     //Log.d("isEmailVerified", "sign in View: ${viewModel.getEmailVerfiedState()}")
                     if (viewModel.getEmailVerfiedState()) {
-                        if (viewModel.doesUserExist){
+                        Log.d("userExist", "sign in does user exist: ${viewModel.doesUserExist()}")
+                        if (viewModel.doesUserExist()){
                         //Log.d("isUserVerified", "navigated from sign in view home")
                         navController.navigate(Screens.HomeScreen.route, builder = {
                             popUpTo(Screens.SignInScreen.route) {

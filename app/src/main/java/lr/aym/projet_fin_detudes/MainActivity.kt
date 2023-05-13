@@ -21,8 +21,8 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import lr.aym.projet_fin_detudes.components.Screens
 import lr.aym.projet_fin_detudes.ui.theme.Projet_fin_detudesTheme
-import lr.aym.projet_fin_detudes.views.home.AddPostScreen
-import lr.aym.projet_fin_detudes.views.home.AddPostViewModel
+import lr.aym.projet_fin_detudes.views.addPostScreen.AddPostScreen
+import lr.aym.projet_fin_detudes.views.addPostScreen.AddPostViewModel
 import lr.aym.projet_fin_detudes.views.home.Home
 import lr.aym.projet_fin_detudes.views.sign_in_up_process.additionalSignInInfo.AdditionalSignInInfo
 import lr.aym.projet_fin_detudes.views.sign_in_up_process.reset_Password.ResetPasswordView
@@ -65,14 +65,16 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     val isUserSignedOut = mainViewModel.getAuthState().collectAsStateWithLifecycle().value
-                    val startDestination = if (isUserSignedOut){
+
+                    mainViewModel.startDestination.value = if (isUserSignedOut){
                             Screens.SignInScreen.route
                         }else{
                             if (mainViewModel.isEmailVerified){
-                                if (mainViewModel.doesUserExist){
+                                if (mainViewModel.doesUserExist.value){
                                     Log.d("navigatedFrom", "MainActivity")
                                     Screens.HomeScreen.route
                                 }else{
+                                    Log.d("userExist", "does user existe: ${mainViewModel.doesUserExist.value}")
                                     Screens.AdditionalInfoScreen.route
                                 }
 
@@ -86,7 +88,7 @@ class MainActivity : ComponentActivity() {
                     NavHost(navController = navController, startDestination = Screens.SplashScreen.route) {
 
                         composable(Screens.SplashScreen.route){
-                            SplashScreen (navController, startDestination)
+                            SplashScreen (navController, mainViewModel)
                         }
 
                         composable(route = Screens.SignInScreen.route) {

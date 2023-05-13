@@ -16,4 +16,5 @@ interface FireStoreRepository {
     suspend fun checkUserExistenceFireStore():userExistResponse
 
 
+    suspend fun getCurrentUser(): User
 }

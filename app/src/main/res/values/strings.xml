@@ -52,12 +52,18 @@
     <string name="empty_gender">Please select your Gender.</string>
     <string name="empty_email">Please enter your email.</string>
     <string name="non_valid_email">Please enter a valid email.</string>
-    <string name="small_password_length">Password must have 8 charachters at least.</string>
+    <string name="small_password_length">Password must have 8 characters at least.</string>
     <string name="password_no_char_digit">Password must have at least one character and one digit.</string>
     <string name="Description">Description</string>
     <string name="Add_Post">Add Post</string>
     <string name="Done">Done</string>
     <string name="Description_Placeholder">Write something about your product.</string>
+    <string name="add_image">Add Image</string>
+    <string name="settings">Settings</string>
+    <string name="statistics">Statistics</string>
+    <string name="link_with_facebook">Link with facebook</string>
+    <string name="account_linked_succesfully">The linking was successful</string>
+    <string name="error_while_linking">error: %1$s</string>
 
 
 </resources>

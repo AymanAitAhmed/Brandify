@@ -14,17 +14,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.delay
+import lr.aym.projet_fin_detudes.MainViewModel
 import lr.aym.projet_fin_detudes.components.Screens
 
 @Composable
 fun SplashScreen(
     navController: NavController,
-    startDestination:String
+    viewModel: MainViewModel
 ) {
 
     LaunchedEffect(key1 = 1){
         delay(3000L)
-        navController.navigate(startDestination){
+        navController.navigate(viewModel.startDestination.value){
             popUpTo(Screens.SplashScreen.route){
                 inclusive=true
             }

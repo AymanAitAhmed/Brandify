@@ -1,4 +1,4 @@
-package lr.aym.projet_fin_detudes.views.home
+package lr.aym.projet_fin_detudes.views.addPostScreen
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -35,6 +35,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -44,16 +45,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import lr.aym.projet_fin_detudes.R
 import lr.aym.projet_fin_detudes.components.Screens
+import lr.aym.projet_fin_detudes.components.UiText
 
 @Composable
 fun AddPostScreen(
@@ -130,37 +130,25 @@ fun AddPostScreen(
                         disabledIndicatorColor = Color.Transparent
                     )
                 )
-                Spacer(
+                if (viewModel.descriptionError.value.asString() != UiText.StringResource(R.string.empty_string).asString()) {
+                    Text(
+                        text = viewModel.descriptionError.value.asString(),
+                        color = Color.Red,
+                        fontSize = 10.sp
+                    )
+                }
+
+                    Spacer(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(8.dp)
                 )
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = {
-                        multipleImagePicker.launch("image/*")
-                    }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.baseline_image_24),
-                            contentDescription = null,
-                            tint = if (isSystemInDarkTheme()) Color.LightGray else Color.DarkGray,
-                            modifier = Modifier.size(40.dp)
-                        )
-                    }
-                }
 
                 Divider(
                     modifier = Modifier
                         .fillMaxWidth(0.9f)
                         .height(2.dp)
                 )
-                val offsetVal = LocalDensity.current.run {
-                    (18.dp / 2).roundToPx()
-                }
 
                 LazyHorizontalGrid(rows = GridCells.Fixed(1)) {
 
@@ -185,13 +173,53 @@ fun AddPostScreen(
                                     .shadow(5.dp)
                                     .clickable {
                                         viewModel.postImages.value =
-                                            viewModel.postImages.value.filter { it != postImage }
+                                            viewModel.postImages.value.filter {
+                                                it != postImage }
                                     }
 
                             )
 
                         }
 
+                    }
+                    item {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .size(100.dp)
+                                .padding(4.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(
+                                    if (isSystemInDarkTheme()) Color(0x52A8A8A8) else Color(
+                                        0x32494949
+                                    )
+                                )
+                                .clickable {
+                                    multipleImagePicker.launch("image/*")
+                                }) {
+
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.AddCircle,
+                                    contentDescription = null,
+                                    tint = if (isSystemInDarkTheme()) Color(0xD9A8A8A8) else Color(
+                                        0xE5494949
+                                    ),
+                                    modifier = Modifier.size(50.dp)
+                                )
+                                Text(
+                                    text = stringResource(id = R.string.add_image),
+                                    color = MaterialTheme.colors.onBackground,
+                                    fontSize = 13.sp
+                                )
+                            }
+
+                        }
                     }
                 }
             }

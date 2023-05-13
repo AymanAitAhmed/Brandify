@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.AuthCredential
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import lr.aym.projet_fin_detudes.model.emailPassword.EmailPasswordAuthRepository
 import lr.aym.projet_fin_detudes.model.google.GoogleAuthRepository
@@ -28,6 +29,10 @@ class SignInViewModel @Inject constructor(
     val onTapClient : SignInClient
 ) : ViewModel() {
 
+    //var doesUserExist = mutableStateOf(false)
+    init {
+    }
+
     var emailTextFieldValue = mutableStateOf("")
 
     var passwordTextFieldValue = mutableStateOf("")
@@ -46,7 +51,7 @@ class SignInViewModel @Inject constructor(
     var showFacebookLinkAccountDialog = mutableStateOf(false)
     var signInWithGoogle = mutableStateOf(false)
 
-    val doesUserExist = emailPasswordRepo.isUserInfoExist(viewModelScope)
+
 
 
 
@@ -57,10 +62,11 @@ class SignInViewModel @Inject constructor(
     suspend fun getEmailVerfiedState():Boolean{
         return suspendCoroutine {continuation ->
             val isEmailVerified = emailPasswordRepo.currentUser?.isEmailVerified?:false
-            //Log.d("isEmailVerified", "getEmailVerfiedState: $isEmailVerified")
             continuation.resume(isEmailVerified)
         }
     }
+
+
 
 
     fun onSignInWithEmailAndPasswordClick() = viewModelScope.launch {
@@ -76,6 +82,12 @@ class SignInViewModel @Inject constructor(
         viewModelScope.launch {
           emailPasswordRepo.reloadFirebaseUser()
         }
+    }
+    suspend fun doesUserExist():Boolean{
+        val doesUserExist = viewModelScope.async{
+             emailPasswordRepo.isUserInfoExist()
+        }
+        return doesUserExist.await()
     }
 
     fun onSignInWithGoogleClick()=viewModelScope.launch {

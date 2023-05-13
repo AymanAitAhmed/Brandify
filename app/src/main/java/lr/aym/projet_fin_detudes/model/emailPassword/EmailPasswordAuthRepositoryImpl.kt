@@ -1,7 +1,6 @@
 package lr.aym.projet_fin_detudes.model.emailPassword
 
 import android.util.Log
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -11,7 +10,6 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import lr.aym.projet_fin_detudes.model.ReloadUserResponse
 import lr.aym.projet_fin_detudes.model.RevokeAccessResponse
@@ -111,7 +109,20 @@ class EmailPasswordAuthRepositoryImpl @Inject constructor(
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), auth.currentUser == null)
 
-    override fun isUserInfoExist(viewModelScope: CoroutineScope) : Boolean{
+    override fun isEmailVerified():Boolean{
+        auth.currentUser?.let {
+            for (userProvider in it.providerData){
+                 if (userProvider.providerId == FacebookAuthProvider.PROVIDER_ID){
+                    return true
+                }
+            }
+            return it.isEmailVerified
+        }
+        return false
+    }
+
+
+    override suspend fun isUserInfoExist() : Boolean{
         var userExist = false
         auth.currentUser?.let {
             for (userProvider in it.providerData){
@@ -121,7 +132,6 @@ class EmailPasswordAuthRepositoryImpl @Inject constructor(
                 }
             }
         }
-        viewModelScope.launch {
             when(val userExistResponse = fireStoreRepository.checkUserExistenceFireStore()){
                 is FirestoreResponse.Loading ->{
 
@@ -129,13 +139,14 @@ class EmailPasswordAuthRepositoryImpl @Inject constructor(
                 is FirestoreResponse.Success ->{
                     if (userExistResponse.data){
                         userExist = true
+                        Log.d("userExist", "isUserInfoExist inside: $userExist")
                     }
                 }
                 is FirestoreResponse.Failure ->{
 
                 }
             }
-        }
+
         Log.d("userExist", "isUserInfoExist: $userExist")
         return userExist
     }

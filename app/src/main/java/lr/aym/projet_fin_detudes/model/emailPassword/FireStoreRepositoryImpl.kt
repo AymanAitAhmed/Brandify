@@ -1,7 +1,10 @@
 package lr.aym.projet_fin_detudes.model.emailPassword
 
+import android.util.Log
+import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import lr.aym.projet_fin_detudes.model.User
@@ -17,7 +20,9 @@ class FireStoreRepositoryImpl @Inject constructor(
 
     override suspend fun addUserToFireStore(user: User): addUserResponse {
         return try {
-            db.collection("users").add(user).await()
+            user.UID?.let { UID ->
+                db.collection("users").document(UID).set(user).await()
+            }
             FirestoreResponse.Success(true)
         } catch (e: Exception) {
             FirestoreResponse.Failure(e)
@@ -28,7 +33,9 @@ class FireStoreRepositoryImpl @Inject constructor(
     override suspend fun getUserFromFireStore(): getUserResponse {
         return try {
             val user =
-                auth.currentUser?.uid?.let { db.collection("users").document(it).get().await() }
+                auth.currentUser?.uid?.let { UID ->
+                    db.collection("users").document(UID).get().await()
+                }
             FirestoreResponse.Success(auth.currentUser?.uid?.let {
                 user?.toObject(User::class.java)?.copy(UID = it)
             })
@@ -40,19 +47,67 @@ class FireStoreRepositoryImpl @Inject constructor(
     override suspend fun checkUserExistenceFireStore(): userExistResponse {
 
         return try {
-            val user = auth.currentUser?.uid?.let {
-                db.collection("users").document(it).get().await()
+            val user = auth.currentUser?.uid?.let { UID ->
+                Log.d("userExist", "Uid to look for: $UID")
+                db.collection("users").document(UID).get().await()
             }
-            if (user?.exists() == true){
+            if (user?.exists() == true) {
+                Log.d("userExist", "user exsistes")
                 FirestoreResponse.Success(true)
-            }
-            else{
+            } else {
+                Log.d("userExist", "user does not exist")
                 FirestoreResponse.Success(false)
             }
 
-        }catch (e:Exception){
+        } catch (e: Exception) {
             FirestoreResponse.Failure(e)
         }
 
+    }
+
+
+    override suspend fun getCurrentUser(): User {
+        var user = User()
+        auth.currentUser?.let {
+            for (userProvider in it.providerData) {
+                when (userProvider.providerId) {
+                    GoogleAuthProvider.PROVIDER_ID -> user = User(
+                        UID = auth.currentUser?.uid,
+                        username = auth.currentUser?.displayName,
+                        email = auth.currentUser?.email,
+                        phoneNumber = auth.currentUser?.phoneNumber,
+                        profilePicture = auth.currentUser?.photoUrl
+                    )
+
+                    FacebookAuthProvider.PROVIDER_ID -> user = User(
+                        UID = auth.currentUser?.uid,
+                        username = auth.currentUser?.displayName,
+                        email = auth.currentUser?.email,
+                        phoneNumber = auth.currentUser?.phoneNumber,
+                        profilePicture = auth.currentUser?.photoUrl
+                    )
+
+                    else -> {
+                        when (val userFromFireStoreResponse = getUserFromFireStore()) {
+                            is FirestoreResponse.Loading -> {
+
+                            }
+
+                            is FirestoreResponse.Success -> {
+                                userFromFireStoreResponse.data?.let { userFromFireStore ->
+                                    user = userFromFireStore
+                                }
+                            }
+
+                            is FirestoreResponse.Failure -> {
+                                user = User()
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+        return user
     }
 }

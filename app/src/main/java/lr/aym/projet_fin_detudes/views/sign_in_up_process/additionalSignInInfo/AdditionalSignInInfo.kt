@@ -61,7 +61,10 @@ fun AdditionalSignInInfo(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.25f),
+                    .fillMaxHeight(0.25f)
+                    .clickable {
+                               viewModel.signout()
+                    },
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {

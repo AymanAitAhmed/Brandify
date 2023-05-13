@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import lr.aym.projet_fin_detudes.R
+import lr.aym.projet_fin_detudes.components.SignOut
 import lr.aym.projet_fin_detudes.components.UiText
 import lr.aym.projet_fin_detudes.model.User
 import lr.aym.projet_fin_detudes.model.emailPassword.FirestoreResponse
@@ -20,7 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AdditionalSignUpInfoViewModel @Inject constructor(
-    private val fireStoreRepo: FireStoreRepository
+    private val fireStoreRepo: FireStoreRepository,
+    private val signOut: SignOut
 ) : ViewModel() {
 
     var username = mutableStateOf("")
@@ -40,6 +42,9 @@ class AdditionalSignUpInfoViewModel @Inject constructor(
     val errorMessage = mutableStateOf("")
 
 
+    fun signout(){
+        signOut.signOut()
+    }
     fun usernameChecks():Boolean{
         return if (username.value.isBlank()){
             usernameErrorMessage.value = UiText.StringResource(id = R.string.empty_username_error)
@@ -116,5 +121,6 @@ class AdditionalSignUpInfoViewModel @Inject constructor(
             )
         }
     }
+
 
 }
