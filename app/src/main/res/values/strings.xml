@@ -64,6 +64,7 @@
     <string name="link_with_facebook">Link with facebook</string>
     <string name="account_linked_succesfully">The linking was successful</string>
     <string name="error_while_linking">error: %1$s</string>
+    <string name="post_submitted_successfully">Your post has been submiitted for review.</string>
 
 
 </resources>

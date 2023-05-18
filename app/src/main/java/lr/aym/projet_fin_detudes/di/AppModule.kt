@@ -14,12 +14,14 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import lr.aym.projet_fin_detudes.R
+import lr.aym.projet_fin_detudes.components.Constants
 import lr.aym.projet_fin_detudes.components.SignOut
 import lr.aym.projet_fin_detudes.model.emailPassword.EmailPasswordAuthRepository
 import lr.aym.projet_fin_detudes.model.emailPassword.EmailPasswordAuthRepositoryImpl
@@ -31,8 +33,14 @@ import lr.aym.projet_fin_detudes.model.emailPassword.FireStoreRepository
 import lr.aym.projet_fin_detudes.model.emailPassword.FireStoreRepositoryImpl
 import lr.aym.projet_fin_detudes.model.facebook.FacebookAuthRepository
 import lr.aym.projet_fin_detudes.model.facebook.FacebookAuthRepositoryImpl
+import lr.aym.projet_fin_detudes.model.posting.cloudStorage.CloudStorageRepository
+import lr.aym.projet_fin_detudes.model.posting.cloudStorage.CloudStorageRepositoryImpl
+import lr.aym.projet_fin_detudes.model.posting.localServerApi.LocalServerApi
+import lr.aym.projet_fin_detudes.model.posting.localServerApi.LocalServerRepository
+import lr.aym.projet_fin_detudes.model.posting.localServerApi.LocalServerRepositoryImpl
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
-import javax.inject.Singleton
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -62,6 +70,30 @@ class AppModule {
 
     @Provides
     fun provideFirebaseFirestore() = Firebase.firestore
+
+    @Provides
+    fun provideFirebaseStorage() = Firebase.storage
+
+    @Provides
+    fun provideCloudStorageRepository(): CloudStorageRepository = CloudStorageRepositoryImpl(
+        storage = provideFirebaseStorage()
+    )
+
+    @Provides
+    fun provideLocalServerApi(): LocalServerApi {
+        return Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(Constants.BASE_URL)
+            .build()
+            .create(LocalServerApi::class.java)
+
+    }
+
+    @Provides
+    fun provideLocalServerRepository():LocalServerRepository =
+        LocalServerRepositoryImpl(
+            localServerApi = provideLocalServerApi()
+        )
 
     @Provides
     fun provideOneTapClient(

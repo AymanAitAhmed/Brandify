@@ -49,6 +49,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import lr.aym.projet_fin_detudes.R
@@ -57,7 +59,7 @@ import lr.aym.projet_fin_detudes.components.UiText
 
 @Composable
 fun AddPostScreen(
-    viewModel: AddPostViewModel,
+    viewModel: AddPostViewModel = hiltViewModel(),
     navController: NavController
 ) {
 
@@ -67,6 +69,8 @@ fun AddPostScreen(
         rememberLauncherForActivityResult(ActivityResultContracts.GetMultipleContents()) { uri: List<@JvmSuppressWildcards Uri> ->
             viewModel.postImages.value = uri
         }
+
+    val onDoneDialogState = viewModel.onDoneDialogState.collectAsStateWithLifecycle()
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -79,7 +83,9 @@ fun AddPostScreen(
                         }
                     }
                 },
-                onDonePressButton = { /*TODO*/ },
+                onDonePressButton = {
+                    viewModel.sendNewPostForReview()
+                },
                 doneButtonActivated = viewModel.doneButtonActivated.value
             )
         },
@@ -90,6 +96,9 @@ fun AddPostScreen(
                 .padding(contentPadding)
                 .fillMaxSize()
         ) {
+
+            OnDoneDialog(onDoneDialogState = onDoneDialogState, viewModel = viewModel)
+
             Column(
                 modifier = Modifier
                     .padding(top = 16.dp)
@@ -130,7 +139,9 @@ fun AddPostScreen(
                         disabledIndicatorColor = Color.Transparent
                     )
                 )
-                if (viewModel.descriptionError.value.asString() != UiText.StringResource(R.string.empty_string).asString()) {
+                if (viewModel.descriptionError.value.asString() != UiText.StringResource(R.string.empty_string)
+                        .asString()
+                ) {
                     Text(
                         text = viewModel.descriptionError.value.asString(),
                         color = Color.Red,
@@ -138,7 +149,7 @@ fun AddPostScreen(
                     )
                 }
 
-                    Spacer(
+                Spacer(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(8.dp)
@@ -174,7 +185,8 @@ fun AddPostScreen(
                                     .clickable {
                                         viewModel.postImages.value =
                                             viewModel.postImages.value.filter {
-                                                it != postImage }
+                                                it != postImage
+                                            }
                                     }
 
                             )

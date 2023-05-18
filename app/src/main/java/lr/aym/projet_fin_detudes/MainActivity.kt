@@ -22,7 +22,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import lr.aym.projet_fin_detudes.components.Screens
 import lr.aym.projet_fin_detudes.ui.theme.Projet_fin_detudesTheme
 import lr.aym.projet_fin_detudes.views.addPostScreen.AddPostScreen
-import lr.aym.projet_fin_detudes.views.addPostScreen.AddPostViewModel
 import lr.aym.projet_fin_detudes.views.home.Home
 import lr.aym.projet_fin_detudes.views.sign_in_up_process.additionalSignInInfo.AdditionalSignInInfo
 import lr.aym.projet_fin_detudes.views.sign_in_up_process.reset_Password.ResetPasswordView
@@ -55,7 +54,6 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
         val mainViewModel by viewModels<MainViewModel>()
-        val addPostViewModel by viewModels<AddPostViewModel>()
         setContent {
             val navController = rememberNavController()
             Projet_fin_detudesTheme {
@@ -117,7 +115,7 @@ class MainActivity : ComponentActivity() {
                             Home(navController = navController)
                         }
                         composable(route = Screens.AddPostScreen.route){
-                            AddPostScreen(addPostViewModel,navController)
+                            AddPostScreen(navController = navController)
                         }
 
 
