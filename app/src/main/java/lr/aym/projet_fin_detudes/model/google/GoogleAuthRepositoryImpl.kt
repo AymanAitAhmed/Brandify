@@ -6,7 +6,6 @@ import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FieldValue.serverTimestamp
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Named
@@ -19,8 +18,7 @@ class GoogleAuthRepositoryImpl @Inject constructor(
     @Named("SIGN_IN_REQUEST")
     private var signInRequest: BeginSignInRequest,
     @Named("SIGN_UP_REQUEST")
-    private var signUpRequest: BeginSignInRequest,
-    private val db: FirebaseFirestore
+    private var signUpRequest: BeginSignInRequest
 ) : GoogleAuthRepository {
     override val isUserAuthenticatedInFirebase: Boolean
         get() = auth.currentUser != null
@@ -41,28 +39,10 @@ class GoogleAuthRepositoryImpl @Inject constructor(
 
     override suspend fun firebaseSignInWithGoogle(googleCredential: AuthCredential): SignInWithGoogleResponse {
         return try {
-            val authResult = auth.signInWithCredential(googleCredential).await()
-            val isUserNew = authResult.additionalUserInfo?.isNewUser?:false
-            if (isUserNew){
-                addUserToFirestore()
-            }
+            auth.signInWithCredential(googleCredential).await()
             ResponseGoogle.Success(true)
         }catch (e:Exception){
             ResponseGoogle.Failure(e)
         }
     }
-
-    private suspend fun addUserToFirestore(){
-        auth.currentUser?.apply {
-            val user = toUser()
-            db.collection("users").document(uid).set(user).await()
-        }
-    }
-
-    fun FirebaseUser.toUser()= mapOf(
-        "DISPLAY_NAME" to displayName,
-        "EMAIL" to email,
-        "PHOTO_URL" to photoUrl?.toString(),
-        "CREATED_AT" to serverTimestamp()
-    )
 }

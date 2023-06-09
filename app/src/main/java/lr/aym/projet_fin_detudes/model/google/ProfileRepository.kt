@@ -1,8 +1,8 @@
-package lr.aym.projet_fin_detudes.model
+package lr.aym.projet_fin_detudes.model.google
 
-import lr.aym.projet_fin_detudes.model.google.ResponseGoogle
 
 typealias SignOutResponse = ResponseGoogle<Boolean>
+
 
 interface ProfileRepository {
 

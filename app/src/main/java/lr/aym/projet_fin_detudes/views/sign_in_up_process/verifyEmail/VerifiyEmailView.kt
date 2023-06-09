@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -39,110 +40,119 @@ fun VerifiyEmailView(
     viewModel: VerifiyEmailViewModel = hiltViewModel(),
     navController: NavController
 ) {
-    
-    LaunchedEffect(key1 = viewModel.currentUser?.providerId){
+
+    LaunchedEffect(key1 = viewModel.currentUser?.providerId) {
         val userProvider = viewModel.currentUser?.providerData
         if (userProvider != null) {
-            for (profile in userProvider){
-                if (profile.providerId == FacebookAuthProvider.PROVIDER_ID){
+            for (profile in userProvider) {
+                if (profile.providerId == FacebookAuthProvider.PROVIDER_ID) {
                     viewModel.facebookProvider.value = true
                     viewModel.resendVerificationEmail()
                 }
             }
         }
     }
-    
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colors.background),
-        contentAlignment = Alignment.Center
-    ) {
 
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            VerifyEmailTopBar(onBackClick = {
+                viewModel.signOut()
+                navController.popBackStack()
+            })
+        }
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .background(color = MaterialTheme.colors.background),
+            contentAlignment = Alignment.Center
         ) {
 
-
-            Image(
-                painter = painterResource(id = R.drawable.email_sent),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(150.dp)
-                    .clip(shape = CircleShape)
-
-            )
-            Text(
-                text = stringResource(id = R.string.Verify_email), color = MaterialTheme.colors.onBackground,
-                style = MaterialTheme.typography.h4,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-            Text(
-                text = stringResource(id = R.string.Verify_email_sent,"${viewModel.currentUser?.email}"),
-                color = MaterialTheme.colors.onBackground,
-                style = MaterialTheme.typography.body1,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(8.dp)
-            )
-            Text(
-                text = viewModel.errorMessage.value,
-                color = Color.Red,
-                fontSize = 12.sp,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-
-            Row(
-                modifier = Modifier.fillMaxWidth(0.7f),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                LoadingTextButton(
-                    showLoadingState = viewModel.showLoadingStateContinue,
-                    text = stringResource(id = R.string.Continue),
-                    width = 150.dp
-                ) {
-                    viewModel.isEmailVerified()
-                    viewModel.showErrorMessage = true
-                }
-                Text(
-                    text = stringResource(id = R.string.Resend),
-                    textDecoration = TextDecoration.Underline,
+
+
+                Image(
+                    painter = painterResource(id = R.drawable.email_sent),
+                    contentDescription = null,
                     modifier = Modifier
-                        .padding(start = 16.dp)
-                        .clickable {
-                            viewModel.resendVerificationEmail()
-                        },
-                    color = MaterialTheme.colors.onSecondary
-                )
-            }
+                        .size(150.dp)
+                        .clip(shape = CircleShape)
 
-            LaunchedEffect(key1 = viewModel.verifiedEmail) {
-                if (viewModel.verifiedEmail && viewModel.facebookProvider.value) {
-                    navController.navigate(Screens.HomeScreen.route){
-                        popUpTo(route = Screens.VerifyEmailScreen.route){
-                            inclusive = true
-                        }
+                )
+                Text(
+                    text = stringResource(id = R.string.Verify_email),
+                    color = MaterialTheme.colors.onBackground,
+                    style = MaterialTheme.typography.h4,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+                Text(
+                    text = stringResource(
+                        id = R.string.Verify_email_sent,
+                        "${viewModel.currentUser?.email}"
+                    ),
+                    color = MaterialTheme.colors.onBackground,
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(8.dp)
+                )
+                if (viewModel.showErrorMessage){
+                    Text(
+                        text = viewModel.errorMessage.value.asString(),
+                        color = Color.Red,
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                }
+
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(0.7f),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    LoadingTextButton(
+                        showLoadingState = viewModel.showLoadingStateContinue,
+                        text = stringResource(id = R.string.Continue),
+                        width = 150.dp
+                    ) {
+                        viewModel.isEmailVerified()
                     }
-                }else if (viewModel.verifiedEmail){
-                    navController.navigate(Screens.AdditionalInfoScreen.route){
-                        popUpTo(route = Screens.VerifyEmailScreen.route){
-                            inclusive = true
+                    Text(
+                        text = stringResource(id = R.string.Resend),
+                        textDecoration = TextDecoration.Underline,
+                        modifier = Modifier
+                            .padding(start = 16.dp)
+                            .clickable {
+                                viewModel.resendVerificationEmail()
+                            },
+                        color = MaterialTheme.colors.onSecondary
+                    )
+                }
+
+                LaunchedEffect(key1 = viewModel.verifiedEmail) {
+                    if (viewModel.verifiedEmail && viewModel.facebookProvider.value) {
+                        navController.navigate(Screens.HomeScreen.route) {
+                            popUpTo(route = Screens.VerifyEmailScreen.route) {
+                                inclusive = true
+                            }
+                        }
+                    } else if (viewModel.verifiedEmail) {
+                        navController.navigate(Screens.AdditionalInfoScreen.route) {
+                            popUpTo(route = Screens.VerifyEmailScreen.route) {
+                                inclusive = true
+                            }
                         }
                     }
                 }
             }
-            if (viewModel.showErrorMessage && !viewModel.verifiedEmail) {
-                //Log.d("verify error", "Verifiy email first")
-                viewModel.errorMessage.value = "error: please verify you email first."
-            }
-
         }
-
-
     }
-
 }
 

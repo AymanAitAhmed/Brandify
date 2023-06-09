@@ -30,5 +30,5 @@ interface EmailPasswordAuthRepository {
 
     fun getAuthState(viewModelScope: CoroutineScope): AuthStateResponse
     suspend fun isUserInfoExist() : Boolean
-    fun isEmailVerified(): Boolean
+    suspend fun isEmailVerified(): Boolean
 }

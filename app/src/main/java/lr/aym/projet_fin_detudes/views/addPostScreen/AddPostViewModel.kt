@@ -11,12 +11,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import lr.aym.projet_fin_detudes.R
+import lr.aym.projet_fin_detudes.components.SignOut
 import lr.aym.projet_fin_detudes.components.UiText
 import lr.aym.projet_fin_detudes.model.Response
-import lr.aym.projet_fin_detudes.model.emailPassword.FirestoreResponse
+import lr.aym.projet_fin_detudes.model.google.ResponseGoogle
 import lr.aym.projet_fin_detudes.model.posting.Post
 import lr.aym.projet_fin_detudes.model.posting.cloudStorage.CloudStorageRepository
 import lr.aym.projet_fin_detudes.model.posting.localServerApi.LocalServerRepository
+import retrofit2.HttpException
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -24,7 +26,8 @@ import javax.inject.Inject
 class AddPostViewModel @Inject constructor(
     private val cloudStorageRepo: CloudStorageRepository,
     private val localServerRepository: LocalServerRepository,
-    private val auth: FirebaseAuth
+    private val auth: FirebaseAuth,
+    private val signOut: SignOut
 ) : ViewModel() {
 
     val descriptionTextField = mutableStateOf("")
@@ -38,12 +41,28 @@ class AddPostViewModel @Inject constructor(
 
     val postImages = mutableStateOf<List<Uri>>(emptyList())
 
+    val logUserOut = mutableStateOf(false)
+
+    val showSignedOutDialog = mutableStateOf(false)
+
+
     fun isButtonActivated() {
-        doneButtonActivated.value =
-            descriptionTextField.value.isNotEmpty() && postImages.value.isNotEmpty()
+        Log.d("isButtonActivated", "executed")
+        if (descriptionTextField.value.isNotEmpty() && postImages.value.isNotEmpty()) {
+            if (postImages.value.size > 5) {
+                descriptionError.value = UiText.StringResource(R.string.error_to_many_images)
+                doneButtonActivated.value = false
+            } else {
+                descriptionError.value = UiText.StringResource(R.string.empty_string)
+                doneButtonActivated.value = true
+            }
+        } else {
+            doneButtonActivated.value = false
+        }
+
     }
 
-    fun onDialogDismiss(){
+    fun onDialogDismiss() {
         _onDoneDialogState.value = OnDoneDialogState.Closed
         descriptionTextField.value = ""
         postImages.value = emptyList()
@@ -53,39 +72,27 @@ class AddPostViewModel @Inject constructor(
         viewModelScope.launch {
             doneButtonActivated.value = false
             _onDoneDialogState.value = OnDoneDialogState.Loading
-            val uploadImageResponse = auth.currentUser?.uid?.let {
-                cloudStorageRepo.uploadImagesToCloud(postImages.value, it)
+            val userExistenceResponse = auth.currentUser?.uid?.let {
+                localServerRepository.checkUserExistence(it)
             }
-            when (uploadImageResponse) {
-                is FirestoreResponse.Failure -> uploadImageResponse.apply {
-                    _onDoneDialogState.value = OnDoneDialogState.Failure("${e.message}")
-                    doneButtonActivated.value = true
-                    Log.d("sendingPost", "Upload image to firebase error: $e")
-                }
-
-                is FirestoreResponse.Loading -> {
-
-                }
-
-                is FirestoreResponse.Success -> {
-                    val imagesUrls = uploadImageResponse.data
-                    Log.d("sendingPost", "Upload image to firebase success: $imagesUrls")
-                    val postToSend = auth.currentUser?.uid?.let {
-                        Post(
-                            userUID = it,
-                            message = descriptionTextField.value,
-                            DownLoadUrls = imagesUrls.toString()
-                        )
+            when (userExistenceResponse) {
+                is Response.Failure -> userExistenceResponse.apply {
+                    if (e is HttpException && e.code() == 401) {
+                        logUserOut.value = true
+                        Log.d("sendNewPostForReview", "Unauthorized")
                     }
-                    val sendingPostResponse = postToSend?.let {
-                        localServerRepository.sendPostForReview(it)
-                    } ?: Response.Failure(Exception("Post is empty"))
+                }
 
-                    when (sendingPostResponse) {
-                        is Response.Failure -> sendingPostResponse.apply {
+                is Response.Loading -> TODO()
+                is Response.Success -> {
+                    val uploadImageResponse = auth.currentUser?.uid?.let {
+                        cloudStorageRepo.uploadImagesToCloud(postImages.value, it)
+                    }
+                    when (uploadImageResponse) {
+                        is Response.Failure -> uploadImageResponse.apply {
                             _onDoneDialogState.value = OnDoneDialogState.Failure("${e.message}")
                             doneButtonActivated.value = true
-                            Log.d("sendingPost", "sendNewPostForReview error: $e ")
+                            Log.d("sendingPost", "Upload image to firebase error: $e")
                         }
 
                         is Response.Loading -> {
@@ -93,26 +100,71 @@ class AddPostViewModel @Inject constructor(
                         }
 
                         is Response.Success -> {
-                            _onDoneDialogState.value = OnDoneDialogState.Success
-                            descriptionTextField.value = ""
-                            imagesUrls.clear()
-                            doneButtonActivated.value = true
-                            Log.d(
-                                "sendingPost",
-                                "sendNewPostForReview success: ${sendingPostResponse.data} "
-                            )
+                            val imagesUrls = uploadImageResponse.data
+                            Log.d("sendingPost", "Upload image to firebase success: $imagesUrls")
+                            val postToSend = auth.currentUser?.uid?.let {
+                                Post(
+                                    userUID = it,
+                                    message = descriptionTextField.value,
+                                    DownLoadUrls = imagesUrls
+                                )
+                            }
+                            val sendingPostResponse = postToSend?.let {
+                                localServerRepository.sendPostForReview(it)
+                            } ?: Response.Failure(Exception("Post is empty"))
+
+                            when (sendingPostResponse) {
+                                is Response.Failure -> sendingPostResponse.apply {
+                                    _onDoneDialogState.value =
+                                        OnDoneDialogState.Failure("${e.message}")
+                                    doneButtonActivated.value = true
+                                    Log.d("sendingPost", "sendNewPostForReview error: $e ")
+                                }
+
+                                is Response.Loading -> {
+
+                                }
+
+                                is Response.Success -> {
+                                    _onDoneDialogState.value = OnDoneDialogState.Success
+                                    descriptionTextField.value = ""
+                                    imagesUrls.clear()
+                                    doneButtonActivated.value = true
+                                    Log.d(
+                                        "sendingPost",
+                                        "sendNewPostForReview success: ${sendingPostResponse.data} "
+                                    )
+                                }
+                            }
+
+
+                        }
+
+                        null -> {
+                            _onDoneDialogState.value =
+                                OnDoneDialogState.Failure("No user was detected")
                         }
                     }
-
-
                 }
 
-                null -> {
-                    _onDoneDialogState.value = OnDoneDialogState.Failure("No user was detected")
-                }
+                null -> TODO()
             }
+
         }
     }
 
+    fun signOut(): Boolean {
+        val signOutResponse = signOut.signOut()
+        return when (signOutResponse) {
+            is ResponseGoogle.Failure -> {
+                false
+            }
+
+            is ResponseGoogle.Loading -> false
+            is ResponseGoogle.Success -> {
+                signOutResponse.data ?: false
+            }
+        }
+    }
 
 }

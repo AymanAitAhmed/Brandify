@@ -1,6 +1,7 @@
 package lr.aym.projet_fin_detudes.views.sign_in_up_process.signIn
 
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,7 +12,6 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -49,10 +49,9 @@ fun SignInView(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            Icon(
-                imageVector = Icons.Default.Star,
+            Image(
+                painter = painterResource(id = R.drawable.logo),
                 contentDescription = null,
-                tint = MaterialTheme.colors.primary,
                 modifier = Modifier
                     .padding(top = 16.dp)
                     .fillMaxWidth()
@@ -181,6 +180,7 @@ fun SignInView(
                     })
 
                 IconButton(onClick = {
+                    viewModel.showLoadingState.value = true
                     viewModel.signInWithGoogle.value = true
                     viewModel.onSignInWithGoogleClick()
                 }) {

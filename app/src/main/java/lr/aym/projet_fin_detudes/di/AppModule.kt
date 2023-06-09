@@ -11,8 +11,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import dagger.Module
@@ -27,10 +25,8 @@ import lr.aym.projet_fin_detudes.model.emailPassword.EmailPasswordAuthRepository
 import lr.aym.projet_fin_detudes.model.emailPassword.EmailPasswordAuthRepositoryImpl
 import lr.aym.projet_fin_detudes.model.google.GoogleAuthRepository
 import lr.aym.projet_fin_detudes.model.google.GoogleAuthRepositoryImpl
-import lr.aym.projet_fin_detudes.model.ProfileRepository
-import lr.aym.projet_fin_detudes.model.ProfileRepositoryImpl
-import lr.aym.projet_fin_detudes.model.emailPassword.FireStoreRepository
-import lr.aym.projet_fin_detudes.model.emailPassword.FireStoreRepositoryImpl
+import lr.aym.projet_fin_detudes.model.google.ProfileRepository
+import lr.aym.projet_fin_detudes.model.google.ProfileRepositoryImpl
 import lr.aym.projet_fin_detudes.model.facebook.FacebookAuthRepository
 import lr.aym.projet_fin_detudes.model.facebook.FacebookAuthRepositoryImpl
 import lr.aym.projet_fin_detudes.model.posting.cloudStorage.CloudStorageRepository
@@ -58,18 +54,8 @@ class AppModule {
 
     @Provides
     fun provideEmailAuthRepository(): EmailPasswordAuthRepository = EmailPasswordAuthRepositoryImpl(
-        auth = provideFirebaseAuth(),
-        fireStoreRepository = provideFirestoreRepository()
-    )
-
-    @Provides
-    fun provideFirestoreRepository(): FireStoreRepository = FireStoreRepositoryImpl(
-        db = provideFirebaseFirestore(),
         auth = provideFirebaseAuth()
     )
-
-    @Provides
-    fun provideFirebaseFirestore() = Firebase.firestore
 
     @Provides
     fun provideFirebaseStorage() = Firebase.storage
@@ -153,14 +139,12 @@ class AppModule {
         @Named("SIGN_IN_REQUEST")
         signInRequest: BeginSignInRequest,
         @Named("SIGN_UP_REQUEST")
-        signUpRequest: BeginSignInRequest,
-        db: FirebaseFirestore
+        signUpRequest: BeginSignInRequest
     ): GoogleAuthRepository = GoogleAuthRepositoryImpl(
         auth = auth,
         oneTapClient = oneTapClient,
         signInRequest = signInRequest,
-        signUpRequest = signUpRequest,
-        db = db
+        signUpRequest = signUpRequest
     )
 
     @Provides

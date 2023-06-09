@@ -34,7 +34,7 @@ fun LoadingTextButton(
     onClick: () -> Unit
 ) {
     Row(
-        horizontalArrangement = Arrangement.Start,
+        horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .padding(padding)
@@ -43,6 +43,41 @@ fun LoadingTextButton(
             .clip(RoundedCornerShape(roundedCornerShapePercent))
             .background(MaterialTheme.colors.primary)
             .clickable(onClick = onClick)
+
+    ) {
+        if (!showLoadingState.value) {
+            Text(
+                text = text,
+                color = MaterialTheme.colors.onBackground,
+                style = MaterialTheme.typography.h5,
+                modifier = Modifier.padding(start = 8.dp)
+            )
+            Icon(
+                imageVector = Icons.Default.ArrowForward,
+                contentDescription = null,
+                tint = MaterialTheme.colors.onBackground,
+                modifier = Modifier
+                    .height(35.dp)
+                    .width(45.dp)
+            )
+        } else {
+            CircularProgressIndicator(
+                color = MaterialTheme.colors.onBackground
+            )
+        }
+    }
+}
+
+@Composable
+fun LoadingTextButton(
+    showLoadingState: MutableState<Boolean>,
+    text: String,
+    modifier: Modifier
+) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
 
     ) {
         if (!showLoadingState.value) {

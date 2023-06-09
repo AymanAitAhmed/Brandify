@@ -32,14 +32,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import lr.aym.projet_fin_detudes.R
+import lr.aym.projet_fin_detudes.components.Screens
 import lr.aym.projet_fin_detudes.components.UiText
-import lr.aym.projet_fin_detudes.model.User
+import lr.aym.projet_fin_detudes.model.posting.UserProfileInfo
 
 @Composable
 fun HomeDrawerContent(
     viewModel: HomeViewModel,
     navController: NavController,
-    currentUser: User
+    currentUser: UserProfileInfo
 ) {
 
     LazyColumn(
@@ -55,7 +56,7 @@ fun HomeDrawerContent(
                     .fillMaxWidth()
                     .height(8.dp)
             )
-            currentUser.profilePicture?.let { profilePic ->
+            currentUser.photoUrl?.let { profilePic ->
                 AsyncImage(
                     model = profilePic,
                     contentDescription = null,
@@ -93,7 +94,12 @@ fun HomeDrawerContent(
                 trailingIcon = R.drawable.baseline_data_usage_24,
                 rowName = R.string.statistics
             ) {
-
+                navController.navigate(route = Screens.StatisticsScreen.route)
+            }
+        }
+        item {
+            DrawerItemRow(trailingIcon = R.drawable.baseline_pending_24, rowName = R.string.posts_in_review) {
+                navController.navigate(route = Screens.PostsInReviewScreen.route)
             }
         }
         item {
@@ -122,7 +128,14 @@ fun HomeDrawerContent(
                 trailingIcon = R.drawable.baseline_login_24,
                 rowName = R.string.Sign_Out
             ) {
-                viewModel.signOut()
+                val response = viewModel.signOut()
+                if (response){
+                    navController.navigate(Screens.SignInScreen.route){
+                        popUpTo(Screens.AddPostScreen.route){
+                            inclusive=true
+                        }
+                    }
+                }
             }
         }
 

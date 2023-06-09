@@ -1,9 +1,8 @@
-package lr.aym.projet_fin_detudes.model
+package lr.aym.projet_fin_detudes.model.google
 
 import android.util.Log
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.FirebaseAuth
-import lr.aym.projet_fin_detudes.model.google.ResponseGoogle
 import javax.inject.Inject
 import javax.inject.Singleton
 

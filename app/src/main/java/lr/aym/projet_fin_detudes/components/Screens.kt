@@ -9,4 +9,6 @@ sealed class Screens(val route:String){
     object AdditionalInfoScreen : Screens("additional_info_signUp")
     object HomeScreen : Screens("home_Screen")
     object AddPostScreen : Screens("add_post_Screen")
+    object PostsInReviewScreen : Screens("posts_in_review_Screen")
+    object StatisticsScreen : Screens("statistics_Screen")
 }

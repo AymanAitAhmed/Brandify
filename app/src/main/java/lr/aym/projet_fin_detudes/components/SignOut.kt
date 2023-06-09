@@ -1,10 +1,9 @@
 package lr.aym.projet_fin_detudes.components
 
-import lr.aym.projet_fin_detudes.model.ProfileRepository
-import lr.aym.projet_fin_detudes.model.SignOutResponse
-import lr.aym.projet_fin_detudes.model.emailPassword.ResponseEmailPassword
+import lr.aym.projet_fin_detudes.model.google.ProfileRepository
 import lr.aym.projet_fin_detudes.model.facebook.FacebookAuthRepository
 import lr.aym.projet_fin_detudes.model.google.ResponseGoogle
+import lr.aym.projet_fin_detudes.model.google.SignOutResponse
 import javax.inject.Inject
 import javax.inject.Singleton
 

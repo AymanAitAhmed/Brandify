@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Projet_fin_d\'etudes</string>
+    <string name="app_name">Brandify</string>
     <string name="web_client_id">541350921577-o1irkf8ke8co4sakb1avjd1u91g65pmn.apps.googleusercontent.com</string>
     <string name="facebook_app_id">234541415710679</string>
     <string name="fb_login_protocol_scheme">fb234541415710679</string>
@@ -46,7 +46,7 @@
     <string name="empty_username_error">Please enter a username.</string>
     <string name="short_username_length">Username must be at least 3 characters.</string>
     <string name="empty_phone_number">Please enter a phone number.</string>
-    <string name="wrong_phone_number_length">Phone number must have exacly 10 digits.</string>
+    <string name="wrong_phone_number_length">Phone number must have exactly 9 digits.</string>
     <string name="empty_birthdate">Please enter a your date of birth.</string>
     <string name="too_young">Too young. You have to be at least 16 years old.</string>
     <string name="empty_gender">Please select your Gender.</string>
@@ -65,6 +65,26 @@
     <string name="account_linked_succesfully">The linking was successful</string>
     <string name="error_while_linking">error: %1$s</string>
     <string name="post_submitted_successfully">Your post has been submiitted for review.</string>
+    <string name="getting_posts_error">Error: couldn\'t get posts</string>
+    <string name="fetching_your_posts">fetching your posts</string>
+    <string name="empty_list">You have no posts</string>
+    <string name="error_to_many_images">can\'t have more than 5 images</string>
+    <string name="posts_in_review">Posts in review</string>
+    <string name="no_posts_in_review">You have no posts in review</string>
+    <string name="all_posts">All Posts</string>
+    <string name="pictures">Pictures:</string>
+    <string name="error_deleting_post">Error while deleting post</string>
+    <string name="post_deleted">Post has been deleted successfully</string>
+    <string name="delete">Delete</string>
+    <string name="verify_email">Verify Email</string>
+    <string name="error_verify_email">Error: Please verify your email</string>
+    <string name="error_fill_required_filleds">Please fill the required fields</string>
+    <string name="additional_info">Additional Info</string>
+    <string name="pie_chart_title">Total Reactions types on Posts</string>
+    <string name="bar_chart_title">Total comments for each month</string>
+    <string name="no_reactions">You have no reactions yet</string>
+    <string name="account_problem">Account error</string>
+    <string name="account_deleted_dialog">it look like your account has been disabled or deleted. for more info please contact us.</string>
 
 
 </resources>

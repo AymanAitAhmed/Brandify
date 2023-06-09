@@ -8,10 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import lr.aym.projet_fin_detudes.R
 import lr.aym.projet_fin_detudes.components.SignOut
+import lr.aym.projet_fin_detudes.components.UiText
 import lr.aym.projet_fin_detudes.model.emailPassword.EmailPasswordAuthRepository
-import lr.aym.projet_fin_detudes.model.SignOutResponse
 import lr.aym.projet_fin_detudes.model.google.ResponseGoogle
+import lr.aym.projet_fin_detudes.model.google.SignOutResponse
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,7 +30,7 @@ class VerifiyEmailViewModel @Inject constructor(
 
     var showErrorMessage by mutableStateOf(false)
 
-    var errorMessage = mutableStateOf("")
+    var errorMessage = mutableStateOf(UiText.StringResource(R.string.empty_string))
 
     var facebookProvider = mutableStateOf(false)
 
@@ -39,6 +41,10 @@ class VerifiyEmailViewModel @Inject constructor(
         viewModelScope.launch {
             emailPasswordAuthRepository.reloadFirebaseUser()
             verifiedEmail = emailPasswordAuthRepository.currentUser?.isEmailVerified ?: false
+            if (!verifiedEmail){
+                showErrorMessage = true
+                errorMessage.value = UiText.StringResource(R.string.error_verify_email)
+            }
             //Log.d("isEmailVerified", "isEmailVerified $verifiedEmail")
             showLoadingStateContinue.value = false
         }
@@ -56,8 +62,5 @@ class VerifiyEmailViewModel @Inject constructor(
         signOutResponse = signOut.signOut()
     }
 
-    fun getUser(): String? {
-        return emailPasswordAuthRepository.currentUser?.email
-    }
 
 }

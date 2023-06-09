@@ -1,9 +1,9 @@
 package lr.aym.projet_fin_detudes.model.posting.cloudStorage
 
 import android.net.Uri
-import lr.aym.projet_fin_detudes.model.emailPassword.FirestoreResponse
+import lr.aym.projet_fin_detudes.model.Response
 
-typealias AddImagesToCloudResponse = FirestoreResponse<MutableList<String>>
+typealias AddImagesToCloudResponse = Response<MutableList<String>>
 
 interface CloudStorageRepository {
 

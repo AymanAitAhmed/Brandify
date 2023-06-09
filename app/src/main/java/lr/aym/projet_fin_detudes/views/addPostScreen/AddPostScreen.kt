@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -39,6 +40,7 @@ import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,6 +49,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -54,7 +57,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import lr.aym.projet_fin_detudes.R
-import lr.aym.projet_fin_detudes.components.Screens
+import lr.aym.projet_fin_detudes.components.Constants
+import lr.aym.projet_fin_detudes.components.SignedOutDialog
 import lr.aym.projet_fin_detudes.components.UiText
 
 @Composable
@@ -68,20 +72,31 @@ fun AddPostScreen(
     val multipleImagePicker =
         rememberLauncherForActivityResult(ActivityResultContracts.GetMultipleContents()) { uri: List<@JvmSuppressWildcards Uri> ->
             viewModel.postImages.value = uri
+            viewModel.isButtonActivated()
         }
 
     val onDoneDialogState = viewModel.onDoneDialogState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(key1 = viewModel.logUserOut.value ){
+        if (viewModel.logUserOut.value){
+            val signOutResponse = viewModel.signOut()
+            if (signOutResponse){
+                viewModel.showSignedOutDialog.value = true
+            }
+        }
+    }
+
+    if (viewModel.showSignedOutDialog.value){
+        SignedOutDialog(navController = navController, showEmailSentDialog = viewModel.showSignedOutDialog)
+    }
+
 
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
             AddPostTopBar(
                 onBackPressButton = {
-                    navController.navigate(Screens.HomeScreen.route) {
-                        popUpTo(route = Screens.AddPostScreen.route) {
-                            inclusive = true
-                        }
-                    }
+                    navController.popBackStack()
                 },
                 onDonePressButton = {
                     viewModel.sendNewPostForReview()
@@ -114,6 +129,7 @@ fun AddPostScreen(
                     Text(
                         text = "${stringResource(id = R.string.Description)} :",
                         color = MaterialTheme.colors.primary,
+                        fontWeight = FontWeight.Bold,
                         modifier = Modifier
                     )
                 }
@@ -122,8 +138,10 @@ fun AddPostScreen(
                 TextField(
                     value = viewModel.descriptionTextField.value,
                     onValueChange = {
-                        viewModel.descriptionTextField.value = it
-                        viewModel.isButtonActivated()
+                        if (it.length<Constants.ADD_POST_DESCRIPTION_MAX_LENGTH){
+                            viewModel.descriptionTextField.value = it
+                            viewModel.isButtonActivated()
+                        }
                     },
                     placeholder = {
                         Text(text = stringResource(id = R.string.Description_Placeholder))
@@ -139,6 +157,17 @@ fun AddPostScreen(
                         disabledIndicatorColor = Color.Transparent
                     )
                 )
+                Row(
+                    Modifier.fillMaxWidth(0.9f),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Text(
+                        text = "${viewModel.descriptionTextField.value.length}/${Constants.ADD_POST_DESCRIPTION_MAX_LENGTH}",
+                        color = MaterialTheme.colors.onSurface,
+                        style = MaterialTheme.typography.body1
+                    )
+                }
                 if (viewModel.descriptionError.value.asString() != UiText.StringResource(R.string.empty_string)
                         .asString()
                 ) {
@@ -158,10 +187,16 @@ fun AddPostScreen(
                 Divider(
                     modifier = Modifier
                         .fillMaxWidth(0.9f)
-                        .height(2.dp)
+                        .height(1.dp)
+                )
+                Text(
+                    text = stringResource(id = R.string.pictures),
+                    color = MaterialTheme.colors.primary,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.fillMaxWidth(0.9f)
                 )
 
-                LazyHorizontalGrid(rows = GridCells.Fixed(1)) {
+                LazyHorizontalGrid(rows = GridCells.Fixed(1), modifier = Modifier.height(150.dp)) {
 
                     items(viewModel.postImages.value) { postImage ->
                         Box(contentAlignment = Alignment.Center) {
@@ -170,7 +205,8 @@ fun AddPostScreen(
                                 contentDescription = null,
                                 modifier = Modifier
                                     .padding(4.dp)
-                                    .size(100.dp)
+                                    .fillMaxHeight()
+                                    .width(100.dp)
                                     .clip(RoundedCornerShape(12.dp)),
                                 contentScale = ContentScale.Crop,
                             )
@@ -179,7 +215,7 @@ fun AddPostScreen(
                                 contentDescription = null,
                                 tint = Color.LightGray,
                                 modifier = Modifier
-                                    .offset(x = 45.dp, y = (-45).dp)
+                                    .offset(x = 45.dp, y = (-65).dp)
                                     .size(20.dp)
                                     .shadow(5.dp)
                                     .clickable {
@@ -187,6 +223,7 @@ fun AddPostScreen(
                                             viewModel.postImages.value.filter {
                                                 it != postImage
                                             }
+                                        viewModel.isButtonActivated()
                                     }
 
                             )
@@ -198,8 +235,8 @@ fun AddPostScreen(
                         Box(
                             contentAlignment = Alignment.Center,
                             modifier = Modifier
-                                .size(100.dp)
                                 .padding(4.dp)
+                                .width(100.dp)
                                 .clip(RoundedCornerShape(12.dp))
                                 .background(
                                     if (isSystemInDarkTheme()) Color(0x52A8A8A8) else Color(
@@ -212,9 +249,7 @@ fun AddPostScreen(
 
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center,
-                                modifier = Modifier
-                                    .fillMaxSize()
+                                verticalArrangement = Arrangement.Center
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.AddCircle,
@@ -250,7 +285,7 @@ fun AddPostTopBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = MaterialTheme.colors.primary)
+            .background(color = MaterialTheme.colors.surface)
             .padding(start = 8.dp, end = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -258,21 +293,25 @@ fun AddPostTopBar(
         IconButton(
             onClick = onBackPressButton
         ) {
-            Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = null,
+                tint = MaterialTheme.colors.onSurface
+            )
         }
 
         Text(
             text = stringResource(id = R.string.Add_Post),
-            color = Color.White,
+            color = MaterialTheme.colors.onSurface,
             style = MaterialTheme.typography.h6
         )
 
         Button(
             onClick = onDonePressButton,
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color.White,
-                contentColor = MaterialTheme.colors.primary,
-                disabledBackgroundColor = Color.LightGray
+                backgroundColor = MaterialTheme.colors.primary,
+                contentColor = MaterialTheme.colors.onBackground,
+                disabledBackgroundColor = MaterialTheme.colors.primary
             ),
             enabled = doneButtonActivated
         ) {

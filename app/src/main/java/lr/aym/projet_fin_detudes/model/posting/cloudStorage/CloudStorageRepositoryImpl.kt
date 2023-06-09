@@ -3,7 +3,7 @@ package lr.aym.projet_fin_detudes.model.posting.cloudStorage
 import android.net.Uri
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
-import lr.aym.projet_fin_detudes.model.emailPassword.FirestoreResponse
+import lr.aym.projet_fin_detudes.model.Response
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,9 +22,9 @@ class CloudStorageRepositoryImpl @Inject constructor(
                         .storage.downloadUrl.await().toString()
                 )
             }
-            return FirestoreResponse.Success(imagesCloudUrls)
+            return Response.Success(imagesCloudUrls)
         }catch (e : Exception){
-            FirestoreResponse.Failure(e)
+            Response.Failure(e)
         }
     }
 

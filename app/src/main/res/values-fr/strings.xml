@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Brandify</string>
+    <string name="web_client_id">541350921577-o1irkf8ke8co4sakb1avjd1u91g65pmn.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">234541415710679</string>
+    <string name="fb_login_protocol_scheme">fb234541415710679</string>
+    <string name="facebook_client_token">8f884056a0afffe81e4b157c12e237b4</string>
+
+    <string name="empty_string">empty</string>
+
+    <string name="Sign_In">Se connecter</string>
+    <string name="Email">Email</string>
+    <string name="Password">Mot de passe</string>
+    <string name="Forgot_password">Mot de passe oublié? Réinitialiser</string>
+    <string name="or_login_with">Ou connecter avec</string>
+    <string name="no_Account">Vous n\'avez pas de compte? Inscrire</string>
+
+    <string name="Confirm_Password">Confirmer le mot de passe</string>
+    <string name="Sign_Up">Inscrire</string>
+    <string name="mismatch_passwords">Les mots de passes ne correspondent pas.</string>
+    <string name="Username">Nom d\'utilisateur</string>
+    <string name="Phone_Number">Numéro de téléphone</string>
+    <string name="Birth_date">Date de naissance</string>
+    <string name="Gender">Genre</string>
+    <string name="Male_Gender">Homme</string>
+    <string name="Female_Gender">Femme</string>
+    <string name="Sign_Out">Déconnexion</string>
+
+    <string name="Email_Reset_password_dialog_message">Veuillez vérifier votre email et réinitialiser votre mot de passe, puis vous reconnecter</string>
+    <string name="Email_sent">Email envoyé</string>
+    <string name="Return_SignIn">Retour</string>
+    <string name="Reset_password">Réinitialiser le mot de passe</string>
+    <string name="Reset_password_message">Saisissez l\'email associé à votre compte et nous vous enverrons un email avec des instructions pour réinitialiser votre mot de passe</string>
+    <string name="Email_message">Adresse email</string>
+    <string name="Send">Envoyer</string>
+    <string name="Return_to_Login">Retourner à la connexion?</string>
+    <string name="oops">Oops..!</string>
+    <string name="link_facebook_account_message">L\'email utilisé dans votre compte Facebook est déjà associé à un compte existant. Veuillez d\'abord vous connecter à votre compte d\'origine, puis le lier à votre compte Facebook</string>
+    <string name="Already_have_account_message">Vous avez déjà un compte ? Se connecter</string>
+    <string name="Verify_email">Vérifiez votre email</string>
+    <string name="Verify_email_sent">Un email a été envoyé à %1$s. Veuillez cliquer sur le lien dans l\'email pour vérifier votre adresse email.</string>
+    <string name="Continue">Continuer</string>
+    <string name="Resend">Renvoyer ?</string>
+    <string name="welcome_message">Bienvenue %1$s</string>
+
+    <string name="empty_username_error">Veuillez entrer un nom d\'utilisateur.</string>
+    <string name="short_username_length">Le nom d\'utilisateur doit comporter au moins 3 caractères.</string>
+    <string name="empty_phone_number">Veuillez entrer un numéro de téléphone.</string>
+    <string name="wrong_phone_number_length">Le numéro de téléphone doit comporter exactement 9 chiffres.</string>
+    <string name="empty_birthdate">Veuillez entrer votre date de naissance.</string>
+    <string name="too_young">Trop jeune. Vous devez avoir au moins 16 ans.</string>
+    <string name="empty_gender">Veuillez sélectionner votre genre.</string>
+    <string name="empty_email">Veuillez entrer votre email.</string>
+    <string name="non_valid_email">Veuillez entrer un email valide.</string>
+    <string name="small_password_length">Le mot de passe doit comporter au moins 8 caractères.</string>
+    <string name="password_no_char_digit">Le mot de passe doit comporter au moins un caractère et un chiffre.</string>
+    <string name="Description">Description</string>
+    <string name="Add_Post">Ajouter une publication</string>
+    <string name="Done">Terminé</string>
+    <string name="Description_Placeholder">Écrivez quelque chose sur votre produit.</string>
+    <string name="add_image">Ajouter une image</string>
+    <string name="settings">Paramètres</string>
+    <string name="statistics">Statistiques</string>
+    <string name="link_with_facebook">Lier avec Facebook</string>
+    <string name="account_linked_succesfully">Le lien a été établi avec succès</string>
+    <string name="error_while_linking">Erreur : %1$s</string>
+    <string name="post_submitted_successfully">Votre publication a été soumis pour examener.</string>
+    <string name="getting_posts_error">Erreur : impossible d\'obtenir les publications</string>
+    <string name="fetching_your_posts">Récupération de vos publications</string>
+    <string name="empty_list">Vous n\'avez aucun publication</string>
+    <string name="error_to_many_images">Impossible d\'avoir plus de 5 images</string>
+    <string name="posts_in_review">Publications en cours d\'examen</string>
+    <string name="no_posts_in_review">Vous n\'avez aucun publication en cours d\'examen</string>
+    <string name="all_posts">Tous les publications</string>
+    <string name="pictures">Images :</string>
+    <string name="error_deleting_post">Erreur lors de la suppression du publication</string>
+    <string name="post_deleted">La publication a été supprimé avec succès</string>
+    <string name="delete">Supprimer</string>
+    <string name="verify_email">Vérifier l\'email</string>
+    <string name="error_verify_email">Erreur : Veuillez vérifier votre email</string>
+    <string name="error_fill_required_filleds">Veuillez remplir les champs obligatoires</string>
+    <string name="additional_info">Informations supplémentaires</string>
+    <string name="pie_chart_title">Total des types de réactions sur les publications</string>
+    <string name="bar_chart_title">Total des commentaires pour chaque mois</string>
+    <string name="no_reactions">Vous n\'avez encore aucune réaction</string>
+    <string name="account_problem">Erreur de Compte</string>
+    <string name="account_deleted_dialog">Votre compte a été désactive ou supprimer. Pour plus d\'information veuillez nous contacter.</string>
+
+
+</resources>

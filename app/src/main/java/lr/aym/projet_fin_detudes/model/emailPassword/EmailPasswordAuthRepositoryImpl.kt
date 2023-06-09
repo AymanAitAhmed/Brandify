@@ -22,8 +22,7 @@ import javax.inject.Singleton
 
 @Singleton
 class EmailPasswordAuthRepositoryImpl @Inject constructor(
-    private val auth: FirebaseAuth,
-    private val fireStoreRepository: FireStoreRepository
+    private val auth: FirebaseAuth
 ) : EmailPasswordAuthRepository {
     override val currentUser: FirebaseUser?
         get() = auth.currentUser
@@ -109,7 +108,7 @@ class EmailPasswordAuthRepositoryImpl @Inject constructor(
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), auth.currentUser == null)
 
-    override fun isEmailVerified():Boolean{
+    override suspend fun isEmailVerified():Boolean{
         auth.currentUser?.let {
             for (userProvider in it.providerData){
                  if (userProvider.providerId == FacebookAuthProvider.PROVIDER_ID){
@@ -132,20 +131,10 @@ class EmailPasswordAuthRepositoryImpl @Inject constructor(
                 }
             }
         }
-            when(val userExistResponse = fireStoreRepository.checkUserExistenceFireStore()){
-                is FirestoreResponse.Loading ->{
 
-                }
-                is FirestoreResponse.Success ->{
-                    if (userExistResponse.data){
-                        userExist = true
-                        Log.d("userExist", "isUserInfoExist inside: $userExist")
-                    }
-                }
-                is FirestoreResponse.Failure ->{
-
-                }
-            }
+        if (auth.currentUser?.displayName != null){
+            userExist = true
+        }
 
         Log.d("userExist", "isUserInfoExist: $userExist")
         return userExist

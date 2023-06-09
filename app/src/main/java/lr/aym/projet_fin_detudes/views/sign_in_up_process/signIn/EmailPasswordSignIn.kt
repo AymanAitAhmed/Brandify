@@ -20,7 +20,6 @@ fun EmailPasswordSignIn(
         }
 
         is ResponseEmailPassword.Success -> {
-            viewModel.showLoadingState.value = false
             val isUserSignedIn = signInResponse.data
             LaunchedEffect(key1 = isUserSignedIn) {
                 viewModel.reloadUser()
@@ -29,7 +28,8 @@ fun EmailPasswordSignIn(
                     if (viewModel.getEmailVerfiedState()) {
                         Log.d("userExist", "sign in does user exist: ${viewModel.doesUserExist()}")
                         if (viewModel.doesUserExist()){
-                        //Log.d("isUserVerified", "navigated from sign in view home")
+                            viewModel.showLoadingState.value = false
+                            //Log.d("isUserVerified", "navigated from sign in view home")
                         navController.navigate(Screens.HomeScreen.route, builder = {
                             popUpTo(Screens.SignInScreen.route) {
                                 inclusive = true
@@ -37,6 +37,7 @@ fun EmailPasswordSignIn(
                         })
                         }
                         else{
+                            viewModel.showLoadingState.value = false
                             navController.navigate(Screens.AdditionalInfoScreen.route, builder = {
                                 popUpTo(Screens.SignInScreen.route) {
                                     inclusive = true
@@ -44,6 +45,7 @@ fun EmailPasswordSignIn(
                             })
                         }
                     } else {
+                        viewModel.showLoadingState.value = false
                         //Log.d("isUserVerified", "navigated from sign in view verify")
                         navController.navigate(Screens.VerifyEmailScreen.route, builder = {
                             popUpTo(Screens.SignInScreen.route) {
