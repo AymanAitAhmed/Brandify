@@ -81,6 +81,7 @@ fun SignedOutDialog(
                 onClick = {
                     showEmailSentDialog.value = false
                     navController.popBackStack(route = Screens.SignInScreen.route,inclusive = false)
+                    navController.navigate(route = Screens.SignInScreen.route)
                 },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = MaterialTheme.colors.primary,

@@ -163,10 +163,12 @@ fun Home(
                         items(userPosts) { userPost ->
                             PostCard(
                                 postDetailsFromFb = userPost,
-                                username = userProfileInfo.username ?: ""
-                            ) {
+                                username = userProfileInfo.username ?: "",
+                                onDeleteLoadingState = viewModel.showDeletePostLoading,
+                            onDeleteClick = {
                                 viewModel.deletePostFromFb(userPost.id)
                             }
+                            )
                             Spacer(
                                 modifier = Modifier
                                     .fillMaxWidth()

@@ -44,6 +44,9 @@ class HomeViewModel @Inject constructor(
     val logUserOut = mutableStateOf(false)
 
     val showSignedOutDialog = mutableStateOf(false)
+    val showDeletePostLoading = mutableStateOf(false)
+
+
 
     init {
         getUserProfile()
@@ -75,16 +78,20 @@ class HomeViewModel @Inject constructor(
     }
 
     fun deletePostFromFb(postId : String){
+        showDeletePostLoading.value = true
         viewModelScope.launch {
             val deletePostFromFbResponse = localServerRepository.deletePostFromFb(postId)
             when(deletePostFromFbResponse){
                 is Response.Failure -> deletePostFromFbResponse.apply{
+                    showDeletePostLoading.value = false
                     _snackBarText.value = UiText.StringResource(R.string.error_deleting_post)
                     Log.d("deletePostFromFb", "Failure : $e")
                 }
                 is Response.Loading -> TODO()
                 is Response.Success ->deletePostFromFbResponse.apply {
                     if (data){
+                        getUserProfile()
+                        showDeletePostLoading.value = false
                         _snackBarText.value  = UiText.StringResource(R.string.post_deleted)
                     }
                 }
