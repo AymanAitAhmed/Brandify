@@ -25,7 +25,6 @@ Brandify is an Android app designed to assist entrepreneurs in expanding their b
 
 ## Screenshots
 
-> **Add screenshots of the app here**
 
 .
 
